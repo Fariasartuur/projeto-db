@@ -106,7 +106,7 @@ O projeto foi organizado em 13 semanas, seguindo um cronograma que garante a evo
 
 ## Gestão e Acompanhamento
 
-- **Kanban/Quadro de Gestão:** [Trello do Projeto](https://trello.com/...)
+- **Kanban/Quadro de Gestão:** [Trello do Projeto](https://trello.com/invite/b/68a3cf3f47f223965a30c538/ATTIe3447a41a665c3f2ca71759b09220479BD8C76F2/banco-de-dados)
 - **Business Intelligence (BI):** (em desenvolvimento)
 
 ## 📄 Documentos
