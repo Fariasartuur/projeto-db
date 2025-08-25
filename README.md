@@ -90,7 +90,7 @@ O projeto foi organizado em 13 semanas, seguindo um cronograma que garante a evo
 
 ---
 
-## 📄 Dataset e Documentos  
+## Dataset 
 
 ### Dataset de Mortalidade  
 - **Fonte:** [Sistema de Informação sobre Mortalidade – SIM](https://opendatasus.saude.gov.br/dataset/sim)  
@@ -102,13 +102,26 @@ O projeto foi organizado em 13 semanas, seguindo um cronograma que garante a evo
   - Dados materno-infantis (óbitos fetais, idade da mãe, tipo de parto, peso ao nascer)  
 - **Formato:** Arquivos CSV disponibilizados para download    
 - **Dicionário de Dados:** [Link para o Dicionário SIM](https://s3.sa-east-1.amazonaws.com/ckan.saude.gov.br/SIM/Dicionario_SIM_2025.pdf)  
-- **Exemplo de Arquivo:** [Mortalidade Geral 2024](https://s3.sa-east-1.amazonaws.com/ckan.saude.gov.br/SIM/csv/DO24OPEN_csv.zip)  
+- **Exemplo de Arquivo:** [Mortalidade Geral 2024](https://s3.sa-east-1.amazonaws.com/ckan.saude.gov.br/SIM/csv/DO24OPEN_csv.zip)
 
-### Documentos do Projeto  
-- **Dicionário de Dados:** Descrição completa dos campos do dataset e relações entre tabelas  
-- **Plano de Análise:** Perguntas de negócio e métricas a serem extraídas  
-- **DER (Diagrama Entidade-Relacionamento):** Modelo físico e lógico do banco de dados  
-- **Manual de Uso:** Instruções para executar scripts T-SQL e reproduzir análises  
-- **Kanban/Quadro de Gestão:** Histórico de tarefas e progresso do projeto  
+## Gestão e Acompanhamento
+
+- **Kanban/Quadro de Gestão:** [Trello do Projeto](https://trello.com/...)
+- **Business Intelligence (BI):** (em desenvolvimento)
+
+## 📄 Documentos
+
+### Modelagem
+- **DER (Diagrama Entidade-Relacionamento):** Modelo físico e lógico do banco de dados. 
+  - Modelo Logico (em desenvolvimento) 
+  - Modelo Fisico (em desenvolvimento)
+- **Dicionário de Dados (em desenvolvimento):** Descrição completa dos campos do dataset e relações entre tabelas.
+ 
+### Plano de Analise
+- **[Plano de Análise](docs/plano_de_analise.pdf):** Perguntas de negócio e métricas a serem extraídas.
+  
+### Scripts
+- Criação do Banco (em desenvolvimento)
+- Inserção de Dados (em desenvolvimento)
 
 > Observação: Todos os documentos estão versionados e disponíveis no repositório do GitHub
