@@ -101,8 +101,8 @@ O projeto foi organizado em 13 semanas, seguindo um cronograma que garante a evo
   - Local de ocorrência e município de residência  
   - Dados materno-infantis (óbitos fetais, idade da mãe, tipo de parto, peso ao nascer)  
 - **Formato:** Arquivos CSV disponibilizados para download    
-- **Dicionário de Dados:** [Link para o Dicionário SIM](https://s3.sa-east-1.amazonaws.com/ckan.saude.gov.br/SIM/Dicionario_SIM_2025.pdf)  
-- **Exemplo de Arquivo:** [Mortalidade Geral 2024](https://s3.sa-east-1.amazonaws.com/ckan.saude.gov.br/SIM/csv/DO24OPEN_csv.zip)
+- **Dicionário de Dados:** [Link para o Dicionário SIM](https://s3.sa-east-1.amazonaws.com/ckan.saude.gov.br/SIM/Dicionario_SIM_2025.pdf) 
+- **Dataset Usado:** [Mortalidade Geral 2024](https://s3.sa-east-1.amazonaws.com/ckan.saude.gov.br/SIM/csv/DO24OPEN_csv.zip)
 
 ## Gestão e Acompanhamento
 
