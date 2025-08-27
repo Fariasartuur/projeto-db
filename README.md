@@ -112,13 +112,13 @@ O projeto foi organizado em 13 semanas, seguindo um cronograma que garante a evo
 ## 📄 Documentos
 
 ### Modelagem
-- **DER (Diagrama Entidade-Relacionamento):** Modelo físico e lógico do banco de dados. 
-  - Modelo Logico (em desenvolvimento) 
-  - Modelo Fisico (em desenvolvimento)
-- **Dicionário de Dados (em desenvolvimento):** Descrição completa dos campos do dataset e relações entre tabelas.
+- Modelo Logico (Clicar em cima para melhor visualização):
+  - <img src="docs/modelo-logico/modelo_logico.png" width="500">
+- Modelo Fisico (em desenvolvimento)
  
-### Plano de Analise
+### Plano de Analise e Dicionario de Dados
 - **[Plano de Análise](docs/plano_de_analise.pdf):** Perguntas de negócio e métricas a serem extraídas.
+- **Dicionário de Dados (em desenvolvimento):** Descrição completa dos campos do dataset e relações entre tabelas.
   
 ### Scripts
 - Criação do Banco (em desenvolvimento)
