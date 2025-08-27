@@ -90,7 +90,7 @@ O projeto foi organizado em 13 semanas, seguindo um cronograma que garante a evo
 
 ---
 
-## Dataset 
+## 📁 Dataset 
 
 ### Dataset de Mortalidade  
 - **Fonte:** [Sistema de Informação sobre Mortalidade – SIM](https://opendatasus.saude.gov.br/dataset/sim)  
@@ -104,7 +104,7 @@ O projeto foi organizado em 13 semanas, seguindo um cronograma que garante a evo
 - **Dicionário de Dados:** [Link para o Dicionário SIM](https://s3.sa-east-1.amazonaws.com/ckan.saude.gov.br/SIM/Dicionario_SIM_2025.pdf) 
 - **Dataset Usado:** [Mortalidade Geral 2024](https://s3.sa-east-1.amazonaws.com/ckan.saude.gov.br/SIM/csv/DO24OPEN_csv.zip)
 
-## Gestão e Acompanhamento
+## 📈 Gestão e Acompanhamento
 
 - **Kanban/Quadro de Gestão:** [Trello do Projeto](https://trello.com/invite/b/68a3cf3f47f223965a30c538/ATTIe3447a41a665c3f2ca71759b09220479BD8C76F2/banco-de-dados)
 - **Business Intelligence (BI):** (em desenvolvimento)
