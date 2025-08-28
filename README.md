@@ -72,21 +72,11 @@ O projeto foi organizado em 13 semanas, seguindo um cronograma que garante a evo
 
 ## 👥 Participantes por Semana  
 
-| Semana | Participantes |
+| Participantes | Funções | 
 |--------|---------------|
-| **Semana 1** | Todos |
-| **Semana 2** | Arquiteto de Dados: Christian, Octávio, Victória<br>Analista de Dados: Bartolomeu, Pedro, Christian, Artur, Octávio |
-| **Semana 3** | Arquiteto de Dados: Christian, Octávio, Victória |
-| **Semana 4** | Arquiteto de Dados: Christian, Octávio, Victória<br>Analista de Dados: Bartolomeu, Pedro, Christian, Artur, Octávio |
-| **Semana 5** | Analista de Dados: Bartolomeu, Pedro, Christian, Artur, Octávio |
-| **Semana 6** | Analista de Dados: Bartolomeu, Pedro, Christian, Artur, Octávio |
-| **Semana 7** | Arquiteto de Dados: Christian, Octávio, Victória |
-| **Semana 8** | Analista de Dados: Bartolomeu, Pedro, Christian, Artur, Octávio |
-| **Semana 9** | Arquiteto de Dados: Christian, Octávio, Victória |
-| **Semana 10** | Arquiteto de Dados: Christian, Octávio, Victória |
-| **Semana 11** | Arquiteto de Dados: Christian, Octávio, Victória<br>Analista de Dados: Bartolomeu, Pedro, Christian, Artur, Octávio |
-| **Semana 12** | Todos |
-| **Semana 13** | Todos |
+Arquiteto de Dados: Christian, Octávio, Victória<br>.
+Analista de Dados: Bartolomeu, Pedro, Christian, Artur, Octávio.
+Engenheiro de Dados: Artur, Bartolomeu, Pedro, Victória<br>, Octávio.
 
 ---
 
