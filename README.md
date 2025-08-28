@@ -70,23 +70,16 @@ O projeto foi organizado em 13 semanas, seguindo um cronograma que garante a evo
 
 ---
 
-## 👥 Participantes por Semana  
+## 👥 Colaboradores 
 
-| Semana | Participantes |
-|--------|---------------|
-| **Semana 1** | Todos |
-| **Semana 2** | Arquiteto de Dados: Christian, Octávio, Victória<br>Analista de Dados: Bartolomeu, Pedro, Christian, Artur, Octávio |
-| **Semana 3** | Arquiteto de Dados: Christian, Octávio, Victória |
-| **Semana 4** | Arquiteto de Dados: Christian, Octávio, Victória<br>Analista de Dados: Bartolomeu, Pedro, Christian, Artur, Octávio |
-| **Semana 5** | Analista de Dados: Bartolomeu, Pedro, Christian, Artur, Octávio |
-| **Semana 6** | Analista de Dados: Bartolomeu, Pedro, Christian, Artur, Octávio |
-| **Semana 7** | Arquiteto de Dados: Christian, Octávio, Victória |
-| **Semana 8** | Analista de Dados: Bartolomeu, Pedro, Christian, Artur, Octávio |
-| **Semana 9** | Arquiteto de Dados: Christian, Octávio, Victória |
-| **Semana 10** | Arquiteto de Dados: Christian, Octávio, Victória |
-| **Semana 11** | Arquiteto de Dados: Christian, Octávio, Victória<br>Analista de Dados: Bartolomeu, Pedro, Christian, Artur, Octávio |
-| **Semana 12** | Todos |
-| **Semana 13** | Todos |
+| Colaborador | Cargo |
+| :--- | :--- |
+| [Artur Farias](https://github.com/Fariasartuur) | Engenheiro de Dados, Analista de Dados |
+| [Bartolomeu Gomes](https://github.com/BartoNeto) | Engenheiro de Dados, Analista de Dados |
+| [Pedro Oliveira](https://github.com/Pedro-R-Oliveira) | Engenheiro de Dados, Analista de Dados |
+| [Victória Ester](https://github.com/Victoriaester741) | Engenheiro de Dados, Arquiteto de Dados |
+| [Christian Mendonça](https://github.com/chrisgubany) | Analista de Dados, Arquiteto de Dados |
+| [Octávio França](https://github.com/ofrancakoch) | Engenheiro de Dados, Analista de Dados, Arquiteto de Dados |
 
 ---
 
