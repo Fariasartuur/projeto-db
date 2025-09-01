@@ -111,7 +111,7 @@ O projeto foi organizado em 13 semanas, seguindo um cronograma que garante a evo
  
 ### Plano de Analise e Dicionario de Dados
 - **[Plano de Análise](docs/plano_de_analise.pdf):** Perguntas de negócio e métricas a serem extraídas.
-- **[Dicionário de Dados](docs/arquivos/dicionario_mortalidade.pdf) (em desenvolvimento):** Descrição completa dos campos do dataset e relações entre tabelas.
+- **[Dicionário de Dados](docs/arquivos/dicionario_mortalidade.pdf):** Descrição completa dos campos do dataset e relações entre tabelas.
   
 ### Scripts
 - Criação do Banco (em desenvolvimento)
