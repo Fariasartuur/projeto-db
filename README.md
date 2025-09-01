@@ -110,7 +110,7 @@ O projeto foi organizado em 13 semanas, seguindo um cronograma que garante a evo
 
 ### Modelagem
 - Modelo Logico (Clicar em cima para melhor visualização):
-  - <img src="docs/modelo-logico/modelo_logico.png" width="500">
+  - <img src="docs/modelo-logico/modelo_logico.drawio.png" width="500">
 - Modelo Fisico (em desenvolvimento)
  
 ### Plano de Analise e Dicionario de Dados
