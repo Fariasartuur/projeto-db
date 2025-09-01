@@ -87,13 +87,17 @@ O projeto foi organizado em 13 semanas, seguindo um cronograma que garante a evo
 
 ### Dataset de Mortalidade  
 - **Fonte:** [Sistema de Informação sobre Mortalidade – SIM](https://opendatasus.saude.gov.br/dataset/sim)  
-- **Descrição:** Conjunto de dados que contém informações sobre óbitos no Brasil, incluindo:  
+- **Descrição:** O SIM é uma ferramenta para coletar dados de óbito no Brasil, visando a identificação de padrões e insights sobre a saúde pública. O conjunto de dados inclui informações detalhadas como:  
   - Idade, sexo, raça/cor  
   - Escolaridade e estado civil  
   - Causa básica de morte e acidentes de trabalho  
   - Local de ocorrência e município de residência  
   - Dados materno-infantis (óbitos fetais, idade da mãe, tipo de parto, peso ao nascer)  
-- **Formato:** Arquivos CSV disponibilizados para download    
+- **Formato:** Arquivos CSV disponibilizados para download
+- **Características dos Dados Brutos:** A análise inicial revelou que os dados são codificados e requerem um processo de ETL robusto:
+  - **Dados Categóricos:** Muitos campos usam códigos numéricos (ex: 1 para "sim", 2 para "não").
+  - **Necessidade de Transformação:** Campos de data e hora estão em formato de texto (ex: ddmmaaaa) e devem ser convertidos para tipos de dados DATE e TIME.
+  - **Campos Compostos:** O campo IDADE é composto por dois subcampos: o primeiro indica a unidade da idade e o segundo, a quantidade.
 - **Dicionário de Dados:** [Link para o Dicionário SIM](https://s3.sa-east-1.amazonaws.com/ckan.saude.gov.br/SIM/Dicionario_SIM_2025.pdf) 
 - **Dataset Usado:** [Mortalidade Geral 2024](https://s3.sa-east-1.amazonaws.com/ckan.saude.gov.br/SIM/csv/DO24OPEN_csv.zip)
 
@@ -111,7 +115,7 @@ O projeto foi organizado em 13 semanas, seguindo um cronograma que garante a evo
  
 ### Plano de Analise e Dicionario de Dados
 - **[Plano de Análise](docs/plano_de_analise.pdf):** Perguntas de negócio e métricas a serem extraídas.
-- **[Dicionário de Dados](docs/arquivos/dicionario_mortalidade.pdf):** Descrição completa dos campos do dataset e relações entre tabelas.
+- **[Dicionário de Dados](docs/arquivos/dicionario_mortalidade.pdf):** Descrição completa dos campos do dataset, tipos de dados e relações entre tabelas.
   
 ### Scripts
 - Criação do Banco (em desenvolvimento)
