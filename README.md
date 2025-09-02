@@ -109,9 +109,10 @@ O projeto foi organizado em 13 semanas, seguindo um cronograma que garante a evo
 ## 📄 Documentos
 
 ### Modelagem
-- Modelo Logico (Clicar em cima para melhor visualização):
+- **Modelo Logico** (Clicar em cima para melhor visualização):
   - <img src="docs/modelo-logico/modelo_logico.drawio.png" width="500">
-- Modelo Fisico (em desenvolvimento)
+- **Modelo Fisico** (Clicar em cima para melhor visualização):
+  - <img src="docs/modelo-fisico/modelo_fisico.drawio.png" width="500">
  
 ### Plano de Analise e Dicionario de Dados
 - **[Plano de Análise](docs/plano_de_analise.pdf):** Perguntas de negócio e métricas a serem extraídas.
