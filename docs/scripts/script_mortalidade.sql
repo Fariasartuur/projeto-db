@@ -1,5 +1,3 @@
-USE mortalidade;
-
 CREATE TABLE tipobito (
 	id_tipobito TINYINT PRIMARY KEY,
 	descricao VARCHAR(50)
@@ -508,4 +506,5 @@ CREATE TABLE info_sistema (
 
 	CONSTRAINT FK_info_tp_altera FOREIGN KEY(id_tp_altera)
 	REFERENCES tp_altera (id_tp_altera)
+
 );
