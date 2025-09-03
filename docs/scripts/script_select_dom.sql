@@ -1,6 +1,4 @@
-USE mortalidade;
-
--- Verificar todos os domínios
+-- Verificar todos os domÃ­nios
 SELECT * FROM tipobito;
 SELECT * FROM lococor;
 SELECT * FROM circobito;
@@ -38,3 +36,4 @@ SELECT * FROM tpnivelinv;
 SELECT * FROM tppos;
 SELECT * FROM origem;
 SELECT * FROM tp_altera;
+
