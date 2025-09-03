@@ -119,7 +119,10 @@ O projeto foi organizado em 13 semanas, seguindo um cronograma que garante a evo
 - **[Dicionário de Dados](docs/arquivos/dicionario_mortalidade.pdf):** Descrição completa dos campos do dataset, tipos de dados e relações entre tabelas.
   
 ### Scripts
-- Criação do Banco (em desenvolvimento)
-- Inserção de Dados (em desenvolvimento)
+- **[Script Mortalidade](docs/scripts/script_mortalidade.sql):** Responsável pela criação do banco de dados mortalidade, incluindo as tabelas principais, tabelas de domínio e a maioria dos constraints e checks.
+  > Obs: futuramente será atualizado com novas adições que ainda estão pendentes.
+- **[Script Insert Dominio](docs/scripts/script_insert_dom.sql):** Contém os comandos INSERT para popular todas as tabelas de domínio do banco de dados com os valores previstos no dicionário.
+- **[Script Select Dominio](docs/scripts/script_select_dom.sql):** Script para verificar se todos os dados foram inseridos corretamente, trazendo o conteúdo de cada tabela de domínio via SELECT *.
 
+  
 > Observação: Todos os documentos estão versionados e disponíveis no repositório do GitHub
