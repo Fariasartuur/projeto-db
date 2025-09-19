@@ -115,7 +115,7 @@ O projeto foi organizado em 13 semanas, seguindo um cronograma que garante a evo
   - <img src="docs/modelo-fisico/modelo_fisico.drawio.png" width="500">
  
 ### Plano de Analise e Dicionario de Dados
-- **[Plano de Análise](docs/plano_de_analise.pdf):** Perguntas de negócio e métricas a serem extraídas.
+- **[Plano de Análise](docs/arquivos/plano_de_analise.pdf):** Perguntas de negócio e métricas a serem extraídas.
 - **[Dicionário de Dados](docs/arquivos/dicionario_mortalidade.pdf):** Descrição completa dos campos do dataset, tipos de dados e relações entre tabelas.
   
 ### ⚙️ Scripts e Ordem de Execução
