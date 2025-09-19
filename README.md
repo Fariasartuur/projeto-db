@@ -124,20 +124,20 @@ Para configurar o banco de dados e executar o ETL, siga a ordem abaixo:
 
 **Passo 1: Criação do Banco de Dados e Carga dos Domínios**
 - **[Arquivo](scripts/create_db.sql):** **`scripts/create_db.sql`**
-- **Descrição:** Script único responsável pela criação do banco de dados `mortalidade`, de todas as tabelas, chaves, `constraints`, `checks` e pela inserção dos dados em todas as tabelas de domínio.
+- **Descrição:** Script único responsável pela criação do banco de dados `mortalidade`, de todas as tabelas, `chave`, `constraints`, `checks` e pela inserção dos dados em todas as tabelas de domínio.
 
-**Passo 2: Carga do DataSet de Municípios**
-- **[Arquivo](scripts/sp_insert_municipios.sql):** **`scripts/sp_insert_municipios.sql`**
-- **Descrição:** Script responsável por inserir a lista oficial de municípios do Brasil na tabela `municipio`.
+**Passo 2: Criação das Stored Procedures do ETL**
+- **[Arquivo](scripts/StoredProcedureMunicipio.sql):** **`scripts/StoredProcedureMunicipio.sql`**
+  - **Descrição:** Cria a Stored Procedure que realiza a etapa de **Extração (Extract)**, **Transformação (Transform)** e **Carga (Load)** dos dados dos municipios.
+- **[Arquivo](scripts/StoredProcedureObito.sql):** **`scripts/StoredProcedureObito.sql`**
+  - **Descrição:** Cria a Stored Procedure que realiza a etapa de **Extração (Extract)**, **Transformação (Transform)** e **Carga (Load)** dos dados dos óbitos.
 
-**Passo 3: Criação das Stored Procedures do ETL**
-- **[Arquivo](scripts/sp_extract_db.sql):** **`scripts/sp_extract_db.sql`**
-  - **Descrição:** Cria a Stored Procedure `sp_Extract_Obitos_from_CSV`, que realiza a etapa de **Extração (Extract)** dos dados brutos de óbitos para uma tabela de staging.
-- **[Arquivo](scripts/sp_transform_load_obitos.sql):** **`scripts/sp_transform_load_obitos.sql`**
-  - **Descrição:** Cria a Stored Procedure `sp_Transform_and_Load_Obitos`, que realiza as etapas de **Transformação (Transform)** e **Carga (Load)**, limpando, corrigindo e movendo os dados para o modelo final.
-
-**Passo 4: Execução do ETL Completo**
-- **[Arquivo](scripts/exec_ETL_completo.sql):** **`scripts/exec_ETL_completo.sql`**
-- **Descrição:** **Script principal para a execução do processo.** Ele orquestra a chamada das Stored Procedures na ordem correta para popular o banco de dados. **Atenção:** É necessário editar este arquivo para indicar os caminhos corretos dos arquivos CSV no seu ambiente.
+**Passo 3: Execução do ETL Completo**
+- **[Arquivo](scripts/execucao_etl.sql):** **`scripts/execucao_etl.sql`**
+- **Descrição:** Este script orquestra todo o processo de carga, executando as Stored Procedures mestras na ordem correta. É o único script que precisa ser executado para popular o Data Warehouse após a configuração inicial.
+- **Como Executar:**
+1. Abra o arquivo **`scripts/execucao_etl.sql`**
+2. **Importante:** Altere as variáveis `@CaminhoArquivoMunicipios` e `@CaminhoArquivoObitos` para que apontem para os locais corretos dos seus arquivos CSV.
+3. Execute o script completo.
   
 > Observação: Todos os documentos estão versionados e disponíveis no repositório do GitHub
