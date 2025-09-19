@@ -123,23 +123,23 @@ O projeto foi organizado em 13 semanas, seguindo um cronograma que garante a evo
 Para configurar o banco de dados e executar o ETL, siga a ordem abaixo:
 
 **Passo 1: Criação do Banco de Dados e Carga dos Domínios**
-- **[Arquivo](docs/scripts/create_db.sql):** **`docs/scripts/create_db.sql`**
+- **[Arquivo](scripts/create_db.sql):** **`docs/scripts/create_db.sql`**
 - **Descrição:** Script único responsável pela criação do banco de dados `mortalidade`, de todas as tabelas, chaves, `constraints`, `checks` e pela inserção dos dados em todas as tabelas de domínio.
 
 **Passo 2: Carga da Dimensão de Municípios (Via API)**
-- **[Arquivo](docs/scripts/municipios.py):** **`docs/scripts/municipios.py`**
+- **[Arquivo](scripts/municipios.py):** **`docs/scripts/municipios.py`**
 - **Descrição:** Script em Python que consome a API de localidades do IBGE para buscar e inserir a lista oficial de municípios do Brasil na tabela `municipio`.
 - **Observação:** Requer Python e as bibliotecas `requests` e `pyodbc` instaladas.
  > Obs: Provavelmente sera trocado por um arquivo sql no futuro como uma stored procedure.
 
 **Passo 3: Criação das Stored Procedures do ETL**
-- **[Arquivo](docs/scripts/sp_extract_db.sql):** **`docs/scripts/sp_extract_db.sql`**
+- **[Arquivo](scripts/sp_extract_db.sql):** **`docs/scripts/sp_extract_db.sql`**
   - **Descrição:** Cria a Stored Procedure `sp_Extract_Obitos_from_CSV`, que realiza a etapa de **Extração (Extract)** dos dados brutos de óbitos para uma tabela de staging.
-- **[Arquivo](docs/scripts/sp_transform_load_obitos.sql):** **`docs/scripts/sp_transform_load_obitos.sql`**
+- **[Arquivo](scripts/sp_transform_load_obitos.sql):** **`docs/scripts/sp_transform_load_obitos.sql`**
   - **Descrição:** Cria a Stored Procedure `sp_Transform_and_Load_Obitos`, que realiza as etapas de **Transformação (Transform)** e **Carga (Load)**, limpando, corrigindo e movendo os dados para o modelo final.
 
 **Passo 4: Execução do ETL Completo**
-- **[Arquivo](docs/scripts/exec_ETL_completo.sql):** **`docs/scripts/exec_ETL_completo.sql`**
+- **[Arquivo](scripts/exec_ETL_completo.sql):** **`docs/scripts/exec_ETL_completo.sql`**
 - **Descrição:** **Script principal para a execução do processo.** Ele orquestra a chamada das Stored Procedures na ordem correta para popular o banco de dados. **Atenção:** É necessário editar este arquivo para indicar os caminhos corretos dos arquivos CSV no seu ambiente.
   
 > Observação: Todos os documentos estão versionados e disponíveis no repositório do GitHub
