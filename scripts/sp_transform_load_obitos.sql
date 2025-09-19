@@ -1,18 +1,18 @@
 USE mortalidade;
 GO
 
--- Esta procedure representa as fases de TransformaÁ„o (T) e Carga (L) do processo de ETL.
--- Ela assume que a tabela tempor·ria #stg_dados_brutos j· foi populada pela
--- procedure de extraÁ„o (sp_Extract_Obitos_from_CSV).
+-- Esta procedure representa as fases de Transforma√ß√£o (T) e Carga (L) do processo de ETL.
+-- Ela assume que a tabela tempor√°ria #stg_dados_brutos j√° foi populada pela
+-- procedure de extra√ß√£o (sp_Extract_Obitos_from_CSV).
 
 CREATE OR ALTER PROCEDURE sp_Transform_and_Load_Obitos
 AS
 BEGIN
     SET NOCOUNT ON;
 
-    PRINT 'Iniciando o processo de TransformaÁ„o e Carga...';
+    PRINT 'Iniciando o processo de Transforma√ß√£o e Carga...';
 
-    -- 1. DECLARA«√O DE VARI¡VEIS para o cursor
+    -- 1. DECLARA√á√ÉO DE VARI√ÅVEIS para o cursor
     DECLARE @contador VARCHAR(10), @CB_PRE VARCHAR(10);
     DECLARE @id_obito_inserido INT, @id_escol_falecido_inserido INT, @id_escol_mae_inserida INT, @id_idade_inserido INT;
     DECLARE @TIPOBITO VARCHAR(1), @DTOBITO VARCHAR(8), @HORAOBITO VARCHAR(5);
@@ -38,7 +38,7 @@ BEGIN
     DECLARE @STDOEPIDEM VARCHAR(1), @STDONOVA VARCHAR(1), @TP_ALTERA VARCHAR(2);
     DECLARE @FONTES VARCHAR(6);
 
-    -- 2. DECLARA«√O DO CURSOR para ler da tabela de staging
+    -- 2. DECLARA√á√ÉO DO CURSOR para ler da tabela de staging
     DECLARE cursor_obitos CURSOR FOR
         SELECT * FROM #stg_dados_brutos;
 
@@ -55,10 +55,10 @@ BEGIN
     -- 4. LOOP PRINCIPAL para processar cada linha da tabela de staging
     WHILE @@FETCH_STATUS = 0
     BEGIN
-        -- ValidaÁ„o dos dados essenciais (ex: data do Ûbito e municÌpio de residÍncia)
+        -- Valida√ß√£o dos dados essenciais (ex: data do √≥bito e munic√≠pio de resid√™ncia)
         IF LTRIM(RTRIM(ISNULL(@DTOBITO,''))) <> '' AND ISDATE(SUBSTRING(@DTOBITO, 5, 4) + SUBSTRING(@DTOBITO, 3, 2) + SUBSTRING(@DTOBITO, 1, 2)) = 1
         BEGIN
-            -- Inicia uma transaÁ„o para garantir a atomicidade das inserÁıes
+            -- Inicia uma transa√ß√£o para garantir a atomicidade das inser√ß√µes
             BEGIN TRANSACTION;
             BEGIN TRY
                 -- Inserir na tabela 'obito'
@@ -106,19 +106,19 @@ BEGIN
 
                 -- Inserir em escolaridade_mae e capturar o ID
                 INSERT INTO escolaridade_mae (id_escmae2010, id_escmae, id_escmaeagr1, seriescmae)
-† † † † † † † † VALUES (
-                    -- ** L”GICA DE CORRE«√O PARA O CHECK CONSTRAINT **
+¬† ¬† ¬† ¬† ¬† ¬† ¬† ¬† VALUES (
+                    -- ** L√ìGICA DE CORRE√á√ÉO PARA O CHECK CONSTRAINT **
                     CASE
-                        -- Se a escolaridade È Fundamental/MÈdio mas a sÈrie È nula, salva a escolaridade como 9 (Ignorado)
+                        -- Se a escolaridade √© Fundamental/M√©dio mas a s√©rie √© nula, salva a escolaridade como 9 (Ignorado)
                         WHEN TRY_CONVERT(TINYINT, @ESCMAE2010) IN (1, 2, 3) AND TRY_CONVERT(TINYINT, @SERIESCMAE) IS NULL THEN 9
-                        -- Sen„o, usa o valor que veio do arquivo ou 9 se for inv·lido
+                        -- Sen√£o, usa o valor que veio do arquivo ou 9 se for inv√°lido
                         ELSE ISNULL(TRY_CONVERT(TINYINT, @ESCMAE2010), 9)
                     END,
                     ISNULL(TRY_CONVERT(TINYINT, @ESCMAE), 9),
                     ISNULL(TRY_CONVERT(TINYINT, @ESCMAEAGR1), 9),
                     TRY_CONVERT(TINYINT, @SERIESCMAE)
                 );
-† † † † † † † † SET @id_escol_mae_inserida = SCOPE_IDENTITY();
+¬† ¬† ¬† ¬† ¬† ¬† ¬† ¬† SET @id_escol_mae_inserida = SCOPE_IDENTITY();
 
                 -- Inserir em mae
                 INSERT INTO mae(id_obito, id_gestacao, id_gravidez, id_parto, id_obitoparto, id_tpmorteoco, id_obitograv, id_obitopuerp, id_morteparto, id_escol_mae, idademae, ocupmae, qtdfilvivo, qtdfilmorto, semagestac, peso, causamat)
@@ -149,10 +149,10 @@ BEGIN
         END
         ELSE
         BEGIN
-             PRINT 'AVISO: Linha ' + ISNULL(@contador, 'N/A') + ' ignorada por conter dados essenciais inv·lidos.';
+             PRINT 'AVISO: Linha ' + ISNULL(@contador, 'N/A') + ' ignorada por conter dados essenciais inv√°lidos.';
         END
 
-        -- Pega a prÛxima linha para o loop
+        -- Pega a pr√≥xima linha para o loop
         FETCH NEXT FROM cursor_obitos INTO @contador, @ORIGEM, @TIPOBITO, @DTOBITO, @HORAOBITO, @NATURAL, @CODMUNNATU, @DTNASC, @IDADE, @SEXO, @RACACOR, @ESTCIV,
             @ESC, @ESC2010, @SERIESCFAL, @OCUP, @CODMUNRES, @LOCOCOR, @CODESTAB, @CODMUNOCOR, @IDADEMAE, @ESCMAE, @ESCMAE2010, @SERIESCMAE, @OCUPMAE,
             @QTDFILVIVO, @QTDFILMORT, @GRAVIDEZ, @SEMAGESTAC, @GESTACAO, @PARTO, @OBITOPARTO, @PESO, @TPMORTEOCO, @OBITOGRAV, @OBITOPUERP, @ASSISTMED,
@@ -166,7 +166,7 @@ BEGIN
     CLOSE cursor_obitos;
     DEALLOCATE cursor_obitos;
 
-    PRINT 'Processo de TransformaÁ„o e Carga concluÌdo.';
+    PRINT 'Processo de Transforma√ß√£o e Carga conclu√≠do.';
     SET NOCOUNT OFF;
 END
 GO
