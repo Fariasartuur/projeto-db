@@ -35,6 +35,11 @@ CREATE TABLE tipo_linha (
 	descricao VARCHAR(50)
 );
 
+CREATE TABLE cid10_subcategorias (
+    subcat CHAR(4) PRIMARY KEY,
+    descricao VARCHAR(256)
+);
+
 
 CREATE TABLE cid_causa (
 	id_causa INT PRIMARY KEY IDENTITY,
@@ -45,6 +50,14 @@ CREATE TABLE cid_causa (
 	causabas CHAR(4),
 	causabas_original CHAR(4),
 	cb_alt VARCHAR(10),
+
+
+    CONSTRAINT FK_causabas_cid10 FOREIGN KEY(causabas)
+    REFERENCES cid10_subcategorias (subcat),
+
+
+    CONSTRAINT FK_causabasOriginal_cid10 FOREIGN KEY(causabas_original)
+    REFERENCES cid10_subcategorias (subcat),
 
 	CONSTRAINT FK_causa_obito FOREIGN KEY(id_obito)
 	REFERENCES obito (id_obito),
@@ -188,6 +201,11 @@ CREATE TABLE raca_cor (
 	descricao VARCHAR(50)
 );
 
+CREATE TABLE cbo2002 (
+    codigo CHAR(6) PRIMARY KEY,
+    titulo VARCHAR(256)
+);
+
 CREATE TABLE pessoa_falecida (
 	id_obito INT PRIMARY KEY,
 	codmunnatu CHAR(7),
@@ -200,6 +218,9 @@ CREATE TABLE pessoa_falecida (
 	dtnasc DATE,
 	ocup CHAR(6),
 	natural VARCHAR(4),
+
+	CONSTRAINT FK_pessoa_ocup FOREIGN KEY(ocup)
+    REFERENCES cbo2002 (codigo),
 
 	CONSTRAINT FK_pessoa_obito FOREIGN KEY(id_obito)
 	REFERENCES obito (id_obito),
@@ -321,6 +342,9 @@ CREATE TABLE mae (
 	semagestac TINYINT,
 	peso SMALLINT,
 	causamat VARCHAR(4),
+
+	CONSTRAINT FK_mae_ocupmae FOREIGN KEY(ocupmae)
+    REFERENCES cbo2002 (codigo),
 
 	CONSTRAINT FK_mae_obito FOREIGN KEY(id_obito)
 	REFERENCES obito (id_obito),
