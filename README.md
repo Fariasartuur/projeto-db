@@ -130,7 +130,7 @@ Para configurar o banco de dados e executar o ETL, siga a ordem abaixo:
 - **[Arquivo](scripts/StoredProcedureMunicipio.sql):** **`scripts/StoredProcedureMunicipio.sql`**
   - **Descrição:** Cria a Stored Procedure que realiza a etapa de **Extração (Extract)**, **Transformação (Transform)** e **Carga (Load)** dos dados dos [municipios](datasets/BR_Municipios_2024.csv).
 - **[Arquivo](scripts/StoredProcedureCID10.sql):** **`scripts/StoredProcedureCID10.sql`**
-  - **Descrição:** Cria a Stored Procedure que realiza a etapa de **Extração (Extract)**, **Transformação (Transform)** e **Carga (Load)** dos dados do [CID](datasets/CID-10-SUBCATEGORIAS.csv).
+  - **Descrição:** Cria a Stored Procedure que realiza a etapa de **Extração (Extract)**, **Transformação (Transform)** e **Carga (Load)** dos dados do [CID](datasets/CID-10-SUBCATEGORIAS.CSV).
 - **[Arquivo](scripts/StoredProcedureCBO2002.sql):** **`scripts/StoredProcedureCBO2002.sql`**
   - **Descrição:** Cria a Stored Procedure que realiza a etapa de **Extração (Extract)**, **Transformação (Transform)** e **Carga (Load)** dos dados da [CBO](datasets/cbo2002-ocupacao.csv).
 - **[Arquivo](scripts/StoredProcedureObito.sql):** **`scripts/StoredProcedureObito.sql`**
