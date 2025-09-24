@@ -466,19 +466,15 @@ BEGIN
         stg.SEXO, 
         i.id_idade, 
         stg.DTNASC, 
-        stg.OCUP, 
+        cbo.codigo, 
         stg.NATURAL
     FROM ##stg_obitos_trans_conv AS stg
     JOIN @ObitoMap AS map ON stg.stg_id = map.stg_id
-    LEFT JOIN escolaridade_falecido ef ON stg.ESC = ef.id_esc 
-    AND stg.ESC2010 = ef.id_esc2010 
-    AND stg.SERIESCFAL = ef.seriescfal 
-    AND stg.ESCFALAGR1 = ef.id_escfalagr1
-    LEFT JOIN idade i ON i.id_idade_unidade = TRY_CAST(SUBSTRING(stg.IDADE, 1, 1) AS TINYINT)
-    AND i.quantidade = TRY_CAST(SUBSTRING(stg.IDADE, 2, 2) AS INT)
+    LEFT JOIN dbo.cbo2002 AS cbo ON stg.OCUP = cbo.codigo
+    LEFT JOIN escolaridade_falecido ef ON stg.ESC = ef.id_esc AND stg.ESC2010 = ef.id_esc2010 AND stg.SERIESCFAL = ef.seriescfal AND stg.ESCFALAGR1 = ef.id_escfalagr1
+    LEFT JOIN idade i ON i.id_idade_unidade = TRY_CAST(SUBSTRING(stg.IDADE, 1, 1) AS TINYINT) AND i.quantidade = TRY_CAST(SUBSTRING(stg.IDADE, 2, 2) AS INT)
     OUTER APPLY (SELECT TOP 1 m.cod_municipio FROM municipio m WHERE LEFT(m.cod_municipio, 6) = stg.CODMUNNATU) AS mun_natu
-    OUTER APPLY (SELECT TOP 1 m.cod_municipio FROM municipio m WHERE LEFT(m.cod_municipio, 6) = stg.CODMUNRES) AS mun_res;
-    
+    OUTER APPLY (SELECT TOP 1 m.cod_municipio FROM municipio m WHERE LEFT(m.cod_municipio, 6) = stg.CODMUNRES) AS mun_res;   
     
     INSERT INTO local_ocorrencia (id_obito, id_lococor, codestab, codmunocor)
     SELECT 
@@ -502,18 +498,13 @@ BEGIN
         stg.MORTEPARTO, 
         em.id_escol_mae, 
         stg.IDADEMAE, 
-        stg.OCUPMAE, 
-        stg.QTDFILVIVO, 
-        stg.QTDFILMORT, 
-        stg.SEMAGESTAC, 
-        stg.PESO, 
-        stg.CAUSAMAT
+        cbo_mae.codigo,
+        stg.QTDFILVIVO, stg.QTDFILMORT, stg.SEMAGESTAC, stg.PESO, stg.CAUSAMAT
     FROM ##stg_obitos_trans_conv AS stg
     JOIN @ObitoMap AS map ON stg.stg_id = map.stg_id
-    LEFT JOIN escolaridade_mae em ON stg.ESCMAE = em.id_escmae 
-    AND stg.ESCMAE2010 = em.id_escmae2010 
-    AND stg.SERIESCMAE = em.seriescmae 
-    AND stg.ESCMAEAGR1 = em.id_escmaeagr1;
+    LEFT JOIN dbo.cbo2002 AS cbo_mae ON stg.OCUPMAE = cbo_mae.codigo
+    LEFT JOIN escolaridade_mae em ON stg.ESCMAE = em.id_escmae AND stg.ESCMAE2010 = em.id_escmae2010 AND stg.SERIESCMAE = em.seriescmae AND stg.ESCMAEAGR1 = em.id_escmaeagr1;
+    
     
     INSERT INTO circunstancia_obito (id_obito, id_circobito, id_acidtrab, id_fonte, id_tpobitocor)
     SELECT 
@@ -590,11 +581,13 @@ BEGIN
         map.id_obito,
         unpvt.id_tipo_linha,
         unpvt.cid_cod,
-        stg.CAUSABAS,
-        stg.CAUSABAS_O,
+        cid.subcat,        
+        cid_o.subcat, 
         stg.CB_ALT
     FROM ##stg_obitos_trans_conv AS stg
     JOIN @ObitoMap AS map ON stg.stg_id = map.stg_id
+    LEFT JOIN dbo.cid10_subcategorias AS cid ON stg.CAUSABAS = cid.subcat
+    LEFT JOIN dbo.cid10_subcategorias AS cid_o ON stg.CAUSABAS_O = cid_o.subcat
     CROSS APPLY (
         VALUES
             (1, stg.LINHAA), (2, stg.LINHAB), (3, stg.LINHAC),
