@@ -129,6 +129,10 @@ Para configurar o banco de dados e executar o ETL, siga a ordem abaixo:
 **Passo 2: Criação das Stored Procedures do ETL**
 - **[Arquivo](scripts/StoredProcedureMunicipio.sql):** **`scripts/StoredProcedureMunicipio.sql`**
   - **Descrição:** Cria a Stored Procedure que realiza a etapa de **Extração (Extract)**, **Transformação (Transform)** e **Carga (Load)** dos dados dos [municipios](datasets/BR_Municipios_2024.csv).
+- **[Arquivo](scripts/StoredProcedureCID10.sql):** **`scripts/StoredProcedureCID10.sql`**
+  - **Descrição:** Cria a Stored Procedure que realiza a etapa de **Extração (Extract)**, **Transformação (Transform)** e **Carga (Load)** dos dados do [CID](datasets/CID-10-SUBCATEGORIAS.csv).
+- **[Arquivo](scripts/StoredProcedureCBO2002.sql):** **`scripts/StoredProcedureCBO2002.sql`**
+  - **Descrição:** Cria a Stored Procedure que realiza a etapa de **Extração (Extract)**, **Transformação (Transform)** e **Carga (Load)** dos dados da [CBO](datasets/cbo2002-ocupacao.csv).
 - **[Arquivo](scripts/StoredProcedureObito.sql):** **`scripts/StoredProcedureObito.sql`**
   - **Descrição:** Cria a Stored Procedure que realiza a etapa de **Extração (Extract)**, **Transformação (Transform)** e **Carga (Load)** dos dados dos óbitos.
 
@@ -136,7 +140,7 @@ Para configurar o banco de dados e executar o ETL, siga a ordem abaixo:
 - **[Arquivo](scripts/execucao_etl.sql):** **`scripts/execucao_etl.sql`**
 - **Descrição:** Este script orquestra todo o processo de carga, executando as Stored Procedures mestras na ordem correta. É o único script que precisa ser executado para popular o Data Warehouse após a configuração inicial.
 - **Como Executar:**
-1. Abra o arquivo **`scripts/execucao_etl.sql`**
+1. Abra o [arquivo](scripts/execucao_etl.sql) **`scripts/execucao_etl.sql`**
 2. **Importante:** Altere as variáveis `@CaminhoArquivoMunicipios` e `@CaminhoArquivoObitos` para que apontem para os locais corretos dos seus arquivos CSV.
 3. Execute o script completo.
   
