@@ -141,7 +141,7 @@ Para configurar o banco de dados e executar o ETL, siga a ordem abaixo:
 - **Descrição:** Este script orquestra todo o processo de carga, executando as Stored Procedures mestras na ordem correta. É o único script que precisa ser executado para popular o Data Warehouse após a configuração inicial.
 - **Como Executar:**
 1. Abra o arquivo. 
-2. **Importante:** Altere as variáveis `@CaminhoArquivoMunicipios`, `@@CaminhoArquivoCBO`, `@@CaminhoArquivoCID` e `@CaminhoArquivoObitos` para que apontem para os locais corretos dos seus arquivos CSV.
+2. **Importante:** Altere as variáveis `@CaminhoArquivoMunicipios`, `@CaminhoArquivoCBO`, `@CaminhoArquivoCID` e `@CaminhoArquivoObitos` para que apontem para os locais corretos dos seus arquivos CSV.
 3. Execute o script completo.
 
 **Passo 4: Execução do script de criação de índices (Index)**
