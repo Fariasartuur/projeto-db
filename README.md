@@ -143,5 +143,13 @@ Para configurar o banco de dados e executar o ETL, siga a ordem abaixo:
 1. Abra o [arquivo](scripts/execucao_etl.sql) **`scripts/execucao_etl.sql`**
 2. **Importante:** Altere as variáveis `@CaminhoArquivoMunicipios` e `@CaminhoArquivoObitos` para que apontem para os locais corretos dos seus arquivos CSV.
 3. Execute o script completo.
+
+**Passo 4: Execução do script de criação de índices (Index)**
+- **[Arquivo](scripts/create_indexes.sql):** **`scripts/create_indexes.sql`**
+- **Descrição:** Esse script faz a criação dos indices no qual vão otimizar as buscas necessarias para a analise dos dados.
+
+**Passo 5: Execução do script de criação das Exibições (Views)**
+- **[Arquivo](scripts/views.sql):** **`scripts/views.sql`**
+- **Descrição:** Esse script faz a criação das exibições no qual vão responder as perguntas do [plano de analise](docs/arquivos/plano_de_analise.pdf).
   
 > Observação: Todos os documentos estão versionados e disponíveis no repositório do GitHub
