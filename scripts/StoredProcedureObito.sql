@@ -481,9 +481,19 @@ BEGIN
         map.id_obito, 
         stg.LOCOCOR, 
         stg.CODESTAB,
-        stg.CODMUNOCOR
+        -- Lógica para tratar os códigos ignorados
+        CASE 
+            WHEN stg.CODMUNOCOR = '150000' THEN '1501402' -- Belém, PA
+            WHEN stg.CODMUNOCOR = '220000' THEN '2211001' -- Teresina, PI
+            WHEN stg.CODMUNOCOR = '110000' THEN '1100205' -- Porto Velho, RO
+            WHEN stg.CODMUNOCOR = '410000' THEN '4106902' -- Curitiba, PR
+            WHEN stg.CODMUNOCOR = '290000' THEN '2927408' -- Salvador, BA
+            -- Se não for um dos códigos ignorados, usa a busca normal
+            ELSE mun_ocor.cod_municipio
+        END AS codmunocor_final
     FROM ##stg_obitos_trans_conv AS stg
-    JOIN @ObitoMap AS map ON stg.stg_id = map.stg_id;
+    JOIN @ObitoMap AS map ON stg.stg_id = map.stg_id
+    OUTER APPLY (SELECT TOP 1 m.cod_municipio FROM municipio m WHERE LEFT(m.cod_municipio, 6) = stg.CODMUNOCOR) AS mun_ocor;
 
     INSERT INTO mae (id_obito, id_gestacao, id_gravidez, id_parto, id_obitoparto, id_tpmorteoco, id_obitograv, id_obitopuerp, id_morteparto, id_escol_mae, idademae, ocupmae, qtdfilvivo, qtdfilmorto, semagestac, peso, causamat)
     SELECT
@@ -607,3 +617,5 @@ EXEC sp_load_obitos
 DROP TABLE ##stg_obitos_trans_conv;
 END
 GO
+
+

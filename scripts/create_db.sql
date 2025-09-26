@@ -84,8 +84,8 @@ CREATE TABLE local_ocorrencia(
 	codestab CHAR(8),
 	codmunocor CHAR(7) NOT NULL,
 
- CONSTRAINT FK_local_municipio_ocor FOREIGN KEY(codmunocor) 
- REFERENCES municipio (cod_municipio),
+	CONSTRAINT FK_local_municipio_ocor FOREIGN KEY(codmunocor)
+	REFERENCES municipio (cod_municipio),
 
 	CONSTRAINT FK_local_obito FOREIGN KEY(id_obito)
 	REFERENCES obito (id_obito),
