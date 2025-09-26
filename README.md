@@ -140,8 +140,8 @@ Para configurar o banco de dados e executar o ETL, siga a ordem abaixo:
 - **[Arquivo](scripts/execucao_etl.sql):** **`scripts/execucao_etl.sql`**
 - **Descrição:** Este script orquestra todo o processo de carga, executando as Stored Procedures mestras na ordem correta. É o único script que precisa ser executado para popular o Data Warehouse após a configuração inicial.
 - **Como Executar:**
-1. Abra o [arquivo](scripts/execucao_etl.sql) **`scripts/execucao_etl.sql`**
-2. **Importante:** Altere as variáveis `@CaminhoArquivoMunicipios` e `@CaminhoArquivoObitos` para que apontem para os locais corretos dos seus arquivos CSV.
+1. Abra o arquivo. 
+2. **Importante:** Altere as variáveis `@CaminhoArquivoMunicipios`, `@@CaminhoArquivoCBO`, `@@CaminhoArquivoCID` e `@CaminhoArquivoObitos` para que apontem para os locais corretos dos seus arquivos CSV.
 3. Execute o script completo.
 
 **Passo 4: Execução do script de criação de índices (Index)**
@@ -151,5 +151,17 @@ Para configurar o banco de dados e executar o ETL, siga a ordem abaixo:
 **Passo 5: Execução do script de criação das Exibições (Views)**
 - **[Arquivo](scripts/views.sql):** **`scripts/views.sql`**
 - **Descrição:** Esse script faz a criação das exibições no qual vão responder as perguntas do [plano de analise](docs/arquivos/plano_de_analise.pdf).
+
+### ⚙️ Scripts Extras
+
+**Script Select: Script com os Selects para visualizar todas as tabelas de dominio e tabelas como a de municipio, codigos CBO e CID**
+- **[Arquivo](scripts/consult_tbd.sql):** **`scripts/consult_tbd.sql`**
+
+**Script DQL: Script com os Selects usados na DQL**
+- **[Arquivo](scripts/DQL.sql):** **`scripts/DQL.sql`**
+
+**Script Reports: Script com a execução de cada view criada usada para responder as perguntas do plano de analise.**
+- **[Arquivo](scripts/run_reports.sql):** **`scripts/run_reports.sql`**
+
   
 > Observação: Todos os documentos estão versionados e disponíveis no repositório do GitHub
