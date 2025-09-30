@@ -1,3 +1,6 @@
+USE mortalidade
+GO
+
 -- Índices para acelerar os JOINs com a tabela pessoa_falecida
 CREATE INDEX IX_pessoa_falecida_id_sexo ON pessoa_falecida(id_sexo);
 CREATE INDEX IX_pessoa_falecida_id_racacor ON pessoa_falecida(id_racacor);

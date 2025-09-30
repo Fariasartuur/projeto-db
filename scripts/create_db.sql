@@ -435,6 +435,9 @@ CREATE TABLE atestado (
 	CONSTRAINT FK_atestado_assistmed FOREIGN KEY(id_assistmed)
 	REFERENCES assistmed (id_assistmed),
 
+	CONSTRAINT CHK_Comunsvoim_Obrigatorio
+	CHECK (id_atestante NOT IN (3, 4) OR comunsvoim IS NOT NULL)
+
 );
 
 CREATE TABLE fonteinv (
@@ -519,6 +522,9 @@ CREATE TABLE info_sistema (
 
 	CONSTRAINT FK_info_obito FOREIGN KEY(id_obito)
 	REFERENCES obito (id_obito),
+
+	CONSTRAINT FK_info_stdonova FOREIGN KEY(id_stdonova)
+	REFERENCES stdonova (id_stdonova),
 
 	CONSTRAINT FK_info_fonteinv FOREIGN KEY(id_fonteinv)
 	REFERENCES fonteinv (id_fonteinv),

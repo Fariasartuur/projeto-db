@@ -531,16 +531,20 @@ BEGIN
     LEFT JOIN tpobitocor tpo ON tpo.id_tpobitocor = stg.TPOBITOCOR;
     
     INSERT INTO atestado (id_obito, id_necropsia, id_exame, id_cirurgia, id_atestante, id_assistmed, dtatestado, atestado, comunsvoim)
-    SELECT 
-        map.id_obito, 
-        stg.NECROPSIA, 
-        stg.EXAME, 
-        stg.CIRURGIA, 
-        stg.ATESTANTE, 
-        stg.ASSISTMED, 
-        stg.DTATESTADO, 
-        stg.ATESTADO, 
-        stg.COMUNSVOIM
+    SELECT 
+        map.id_obito, 
+        stg.NECROPSIA, 
+        stg.EXAME, 
+        stg.CIRURGIA, 
+        stg.ATESTANTE, 
+        stg.ASSISTMED, 
+        stg.DTATESTADO, 
+        stg.ATESTADO, 
+        CASE
+            WHEN stg.ATESTANTE IN (3, 4) AND (stg.COMUNSVOIM IS NULL OR LTRIM(RTRIM(stg.COMUNSVOIM)) = '')
+            THEN 'N/A'
+            ELSE stg.COMUNSVOIM
+        END AS comunsvoim
     FROM ##stg_obitos_trans_conv AS stg
     JOIN @ObitoMap AS map ON stg.stg_id = map.stg_id;
     
