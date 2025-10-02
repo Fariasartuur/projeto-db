@@ -150,7 +150,12 @@ Para configurar o banco de dados e executar o ETL, siga a ordem abaixo:
 
 **Passo 5: Execução do script de criação das Exibições (Views)**
 - **[Arquivo](scripts/views.sql):** **`scripts/views.sql`**
-- **Descrição:** Esse script faz a criação das exibições no qual vão responder as perguntas do [plano de analise](docs/arquivos/plano_de_analise.pdf).
+- **Descrição:** Esse script faz a criação das exibições (views) no qual vão responder as perguntas do [plano de analise](docs/arquivos/plano_de_analise.pdf) e de outros views usados futuramente.
+
+**Passo 6: Execução do script de criação dos Triggers**
+- **[Trigger de Auditoria](scripts/Trigger_de_Auditoria.sql):** **`scripts/Trigger_de_Auditoria.sql`**
+- **[Trigger de Validação](scripts/Trigger_de_Validação.sql):** **`scripts/Trigger_de_Validação.sql`**
+- **Descrição:** Este passo executa os scripts que criam dois gatilhos automáticos: um de auditoria, para registrar um histórico completo de todas as alterações feitas nos dados, e um de validação, para garantir a integridade das informações aplicando regras de negócio antes de serem salvas.
 
 ### ⚙️ Scripts Extras
 
