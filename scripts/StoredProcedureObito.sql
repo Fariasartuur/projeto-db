@@ -395,219 +395,236 @@ GO
 CREATE OR ALTER PROCEDURE sp_load_obitos
 AS
 BEGIN
-    DECLARE @ObitoMap TABLE (
-        id_obito INT PRIMARY KEY,
-        stg_id INT NOT NULL UNIQUE
-    );
+    BEGIN TRANSACTION;
 
-    INSERT INTO escolaridade_falecido (id_esc, id_esc2010, seriescfal, id_escfalagr1)
-    SELECT DISTINCT
-        stg.ESC, stg.ESC2010, stg.SERIESCFAL, stg.ESCFALAGR1
-    FROM ##stg_obitos_trans_conv AS stg
-    WHERE 
-        (stg.ESC IS NOT NULL OR stg.ESC2010 IS NOT NULL OR stg.ESCFALAGR1 IS NOT NULL)
-        AND NOT EXISTS (
-            SELECT 1 FROM escolaridade_falecido ef
-            WHERE ef.id_esc = stg.ESC 
-              AND ef.id_esc2010 = stg.ESC2010 
-              AND ef.seriescfal = stg.SERIESCFAL 
-              AND ef.id_escfalagr1 = stg.ESCFALAGR1
+    BEGIN TRY
+        DECLARE @ObitoMap TABLE (
+            id_obito INT PRIMARY KEY,
+            stg_id INT NOT NULL UNIQUE
         );
 
-    INSERT INTO escolaridade_mae (id_escmae, id_escmae2010, seriescmae, id_escmaeagr1)
-    SELECT DISTINCT 
-        stg.ESCMAE, 
-        stg.ESCMAE2010, 
-        stg.SERIESCMAE, 
-        stg.ESCMAEAGR1
-    FROM ##stg_obitos_trans_conv AS stg
-    WHERE 
-        NOT (stg.ESCMAE2010 IN (1, 2, 3) AND stg.SERIESCMAE IS NULL)
-        AND (stg.ESCMAE IS NOT NULL OR stg.ESCMAE2010 IS NOT NULL OR stg.ESCMAEAGR1 IS NOT NULL)
-        AND NOT EXISTS (SELECT 1 FROM escolaridade_mae em WHERE em.id_escmae = stg.ESCMAE 
-                            AND em.id_escmae2010 = stg.ESCMAE2010 
-                            AND em.seriescmae = stg.SERIESCMAE 
-                            AND em.id_escmaeagr1 = stg.ESCMAEAGR1);
+        INSERT INTO escolaridade_falecido (id_esc, id_esc2010, seriescfal, id_escfalagr1)
+        SELECT DISTINCT
+            stg.ESC, stg.ESC2010, stg.SERIESCFAL, stg.ESCFALAGR1
+        FROM ##stg_obitos_trans_conv AS stg
+        WHERE 
+            (stg.ESC IS NOT NULL OR stg.ESC2010 IS NOT NULL OR stg.ESCFALAGR1 IS NOT NULL)
+            AND NOT EXISTS (
+                SELECT 1 FROM escolaridade_falecido ef
+                WHERE ef.id_esc = stg.ESC 
+                  AND ef.id_esc2010 = stg.ESC2010 
+                  AND ef.seriescfal = stg.SERIESCFAL 
+                  AND ef.id_escfalagr1 = stg.ESCFALAGR1
+            );
+
+        INSERT INTO escolaridade_mae (id_escmae, id_escmae2010, seriescmae, id_escmaeagr1)
+        SELECT DISTINCT 
+            stg.ESCMAE, 
+            stg.ESCMAE2010, 
+            stg.SERIESCMAE, 
+            stg.ESCMAEAGR1
+        FROM ##stg_obitos_trans_conv AS stg
+        WHERE 
+            NOT (stg.ESCMAE2010 IN (1, 2, 3) AND stg.SERIESCMAE IS NULL)
+            AND (stg.ESCMAE IS NOT NULL OR stg.ESCMAE2010 IS NOT NULL OR stg.ESCMAEAGR1 IS NOT NULL)
+            AND NOT EXISTS (SELECT 1 FROM escolaridade_mae em WHERE em.id_escmae = stg.ESCMAE 
+                                AND em.id_escmae2010 = stg.ESCMAE2010 
+                                AND em.seriescmae = stg.SERIESCMAE 
+                                AND em.id_escmaeagr1 = stg.ESCMAEAGR1);
 
 
 
-    INSERT INTO idade (id_idade_unidade, quantidade)
-    SELECT DISTINCT
-        TRY_CAST(SUBSTRING(stg.IDADE, 1, 1) AS TINYINT),
-        TRY_CAST(SUBSTRING(stg.IDADE, 2, 2) AS INT)
-    FROM ##stg_obitos_trans_conv AS stg
-    WHERE 
-        stg.IDADE IS NOT NULL AND LEN(stg.IDADE) = 3
-        AND NOT EXISTS (
-            SELECT 1 FROM idade i
-            WHERE i.id_idade_unidade = TRY_CAST(SUBSTRING(stg.IDADE, 1, 1) AS TINYINT)
-              AND i.quantidade = TRY_CAST(SUBSTRING(stg.IDADE, 2, 2) AS INT)
-        );
+        INSERT INTO idade (id_idade_unidade, quantidade)
+        SELECT DISTINCT
+            TRY_CAST(SUBSTRING(stg.IDADE, 1, 1) AS TINYINT),
+            TRY_CAST(SUBSTRING(stg.IDADE, 2, 2) AS INT)
+        FROM ##stg_obitos_trans_conv AS stg
+        WHERE 
+            stg.IDADE IS NOT NULL AND LEN(stg.IDADE) = 3
+            AND NOT EXISTS (
+                SELECT 1 FROM idade i
+                WHERE i.id_idade_unidade = TRY_CAST(SUBSTRING(stg.IDADE, 1, 1) AS TINYINT)
+                  AND i.quantidade = TRY_CAST(SUBSTRING(stg.IDADE, 2, 2) AS INT)
+            );
 
-    MERGE INTO obito AS Target
-    USING ##stg_obitos_trans_conv AS Source
-    ON 1 = 0
-    WHEN NOT MATCHED BY TARGET THEN
-        INSERT (id_tipobito, dtobito, horaobito)
-        VALUES (Source.TIPOBITO, Source.DTOBITO, Source.HORAOBITO)
-    OUTPUT
-        INSERTED.id_obito,
-        Source.stg_id
-    INTO @ObitoMap (id_obito, stg_id);
+        MERGE INTO obito AS Target
+        USING ##stg_obitos_trans_conv AS Source
+        ON 1 = 0
+        WHEN NOT MATCHED BY TARGET THEN
+            INSERT (id_tipobito, dtobito, horaobito)
+            VALUES (Source.TIPOBITO, Source.DTOBITO, Source.HORAOBITO)
+        OUTPUT
+            INSERTED.id_obito,
+            Source.stg_id
+        INTO @ObitoMap (id_obito, stg_id);
 
-    INSERT INTO pessoa_falecida (id_obito, codmunnatu, codmunres, id_escol, id_racacor, id_estciv, id_sexo, id_idade, dtnasc, ocup, natural)
-    SELECT
-        map.id_obito, 
-        mun_natu.cod_municipio,
-        mun_res.cod_municipio, 
-        ef.id_escol, 
-        stg.RACACOR, 
-        stg.ESTCIV, 
-        stg.SEXO, 
-        i.id_idade, 
-        stg.DTNASC, 
-        cbo.codigo, 
-        stg.NATURAL
-    FROM ##stg_obitos_trans_conv AS stg
-    JOIN @ObitoMap AS map ON stg.stg_id = map.stg_id
-    LEFT JOIN dbo.cbo2002 AS cbo ON stg.OCUP = cbo.codigo
-    LEFT JOIN escolaridade_falecido ef ON stg.ESC = ef.id_esc AND stg.ESC2010 = ef.id_esc2010 AND stg.SERIESCFAL = ef.seriescfal AND stg.ESCFALAGR1 = ef.id_escfalagr1
-    LEFT JOIN idade i ON i.id_idade_unidade = TRY_CAST(SUBSTRING(stg.IDADE, 1, 1) AS TINYINT) AND i.quantidade = TRY_CAST(SUBSTRING(stg.IDADE, 2, 2) AS INT)
-    OUTER APPLY (SELECT TOP 1 m.cod_municipio FROM municipio m WHERE LEFT(m.cod_municipio, 6) = stg.CODMUNNATU) AS mun_natu
-    OUTER APPLY (SELECT TOP 1 m.cod_municipio FROM municipio m WHERE LEFT(m.cod_municipio, 6) = stg.CODMUNRES) AS mun_res;   
+        INSERT INTO pessoa_falecida (id_obito, codmunnatu, codmunres, id_escol, id_racacor, id_estciv, id_sexo, id_idade, dtnasc, ocup, natural)
+        SELECT
+            map.id_obito, 
+            mun_natu.cod_municipio,
+            mun_res.cod_municipio, 
+            ef.id_escol, 
+            stg.RACACOR, 
+            stg.ESTCIV, 
+            stg.SEXO, 
+            i.id_idade, 
+            stg.DTNASC, 
+            cbo.codigo, 
+            stg.NATURAL
+        FROM ##stg_obitos_trans_conv AS stg
+        JOIN @ObitoMap AS map ON stg.stg_id = map.stg_id
+        LEFT JOIN dbo.cbo2002 AS cbo ON stg.OCUP = cbo.codigo
+        LEFT JOIN escolaridade_falecido ef ON stg.ESC = ef.id_esc AND stg.ESC2010 = ef.id_esc2010 AND stg.SERIESCFAL = ef.seriescfal AND stg.ESCFALAGR1 = ef.id_escfalagr1
+        LEFT JOIN idade i ON i.id_idade_unidade = TRY_CAST(SUBSTRING(stg.IDADE, 1, 1) AS TINYINT) AND i.quantidade = TRY_CAST(SUBSTRING(stg.IDADE, 2, 2) AS INT)
+        OUTER APPLY (SELECT TOP 1 m.cod_municipio FROM municipio m WHERE LEFT(m.cod_municipio, 6) = stg.CODMUNNATU) AS mun_natu
+        OUTER APPLY (SELECT TOP 1 m.cod_municipio FROM municipio m WHERE LEFT(m.cod_municipio, 6) = stg.CODMUNRES) AS mun_res;   
     
-    INSERT INTO local_ocorrencia (id_obito, id_lococor, codestab, codmunocor)
-    SELECT 
-        map.id_obito, 
-        stg.LOCOCOR, 
-        stg.CODESTAB,
-        -- Lógica para tratar os códigos ignorados
-        CASE 
-            WHEN stg.CODMUNOCOR = '150000' THEN '1501402' -- Belém, PA
-            WHEN stg.CODMUNOCOR = '220000' THEN '2211001' -- Teresina, PI
-            WHEN stg.CODMUNOCOR = '110000' THEN '1100205' -- Porto Velho, RO
-            WHEN stg.CODMUNOCOR = '410000' THEN '4106902' -- Curitiba, PR
-            WHEN stg.CODMUNOCOR = '290000' THEN '2927408' -- Salvador, BA
-            -- Se não for um dos códigos ignorados, usa a busca normal
-            ELSE mun_ocor.cod_municipio
-        END AS codmunocor_final
-    FROM ##stg_obitos_trans_conv AS stg
-    JOIN @ObitoMap AS map ON stg.stg_id = map.stg_id
-    OUTER APPLY (SELECT TOP 1 m.cod_municipio FROM municipio m WHERE LEFT(m.cod_municipio, 6) = stg.CODMUNOCOR) AS mun_ocor;
+        INSERT INTO local_ocorrencia (id_obito, id_lococor, codestab, codmunocor)
+        SELECT 
+            map.id_obito, 
+            stg.LOCOCOR, 
+            stg.CODESTAB,
+            -- Lógica para tratar os códigos ignorados
+            CASE 
+                WHEN stg.CODMUNOCOR = '150000' THEN '1501402' -- Belém, PA
+                WHEN stg.CODMUNOCOR = '220000' THEN '2211001' -- Teresina, PI
+                WHEN stg.CODMUNOCOR = '110000' THEN '1100205' -- Porto Velho, RO
+                WHEN stg.CODMUNOCOR = '410000' THEN '4106902' -- Curitiba, PR
+                WHEN stg.CODMUNOCOR = '290000' THEN '2927408' -- Salvador, BA
+                -- Se não for um dos códigos ignorados, usa a busca normal
+                ELSE mun_ocor.cod_municipio
+            END AS codmunocor_final
+        FROM ##stg_obitos_trans_conv AS stg
+        JOIN @ObitoMap AS map ON stg.stg_id = map.stg_id
+        OUTER APPLY (SELECT TOP 1 m.cod_municipio FROM municipio m WHERE LEFT(m.cod_municipio, 6) = stg.CODMUNOCOR) AS mun_ocor;
 
-    INSERT INTO mae (id_obito, id_gestacao, id_gravidez, id_parto, id_obitoparto, id_tpmorteoco, id_obitograv, id_obitopuerp, id_morteparto, id_escol_mae, idademae, ocupmae, qtdfilvivo, qtdfilmorto, semagestac, peso, causamat)
-    SELECT
-        map.id_obito, 
-        stg.GESTACAO, 
-        stg.GRAVIDEZ, 
-        stg.PARTO, 
-        stg.OBITOPARTO, 
-        stg.TPMORTEOCO, 
-        stg.OBITOGRAV, 
-        stg.OBITOPUERP, 
-        stg.MORTEPARTO, 
-        em.id_escol_mae, 
-        stg.IDADEMAE, 
-        cbo_mae.codigo,
-        stg.QTDFILVIVO, stg.QTDFILMORT, stg.SEMAGESTAC, stg.PESO, stg.CAUSAMAT
-    FROM ##stg_obitos_trans_conv AS stg
-    JOIN @ObitoMap AS map ON stg.stg_id = map.stg_id
-    LEFT JOIN dbo.cbo2002 AS cbo_mae ON stg.OCUPMAE = cbo_mae.codigo
-    LEFT JOIN escolaridade_mae em ON stg.ESCMAE = em.id_escmae AND stg.ESCMAE2010 = em.id_escmae2010 AND stg.SERIESCMAE = em.seriescmae AND stg.ESCMAEAGR1 = em.id_escmaeagr1;
+        INSERT INTO mae (id_obito, id_gestacao, id_gravidez, id_parto, id_obitoparto, id_tpmorteoco, id_obitograv, id_obitopuerp, id_morteparto, id_escol_mae, idademae, ocupmae, qtdfilvivo, qtdfilmorto, semagestac, peso, causamat)
+        SELECT
+            map.id_obito, 
+            stg.GESTACAO, 
+            stg.GRAVIDEZ, 
+            stg.PARTO, 
+            stg.OBITOPARTO, 
+            stg.TPMORTEOCO, 
+            stg.OBITOGRAV, 
+            stg.OBITOPUERP, 
+            stg.MORTEPARTO, 
+            em.id_escol_mae, 
+            stg.IDADEMAE, 
+            cbo_mae.codigo,
+            stg.QTDFILVIVO, stg.QTDFILMORT, stg.SEMAGESTAC, stg.PESO, stg.CAUSAMAT
+        FROM ##stg_obitos_trans_conv AS stg
+        JOIN @ObitoMap AS map ON stg.stg_id = map.stg_id
+        LEFT JOIN dbo.cbo2002 AS cbo_mae ON stg.OCUPMAE = cbo_mae.codigo
+        LEFT JOIN escolaridade_mae em ON stg.ESCMAE = em.id_escmae AND stg.ESCMAE2010 = em.id_escmae2010 AND stg.SERIESCMAE = em.seriescmae AND stg.ESCMAEAGR1 = em.id_escmaeagr1;
     
     
-    INSERT INTO circunstancia_obito (id_obito, id_circobito, id_acidtrab, id_fonte, id_tpobitocor)
-    SELECT 
-        map.id_obito, 
-        circ.id_circobito,
-        acid.id_acidtrab, 
-        f.id_fonte, 
-        tpo.id_tpobitocor
-    FROM ##stg_obitos_trans_conv AS stg
-    JOIN @ObitoMap AS map ON stg.stg_id = map.stg_id
-    LEFT JOIN circobito circ ON circ.id_circobito = stg.CIRCOBITO
-    LEFT JOIN acidtrab acid ON acid.id_acidtrab = stg.ACIDTRAB
-    LEFT JOIN fonte f ON f.id_fonte = stg.FONTE
-    LEFT JOIN tpobitocor tpo ON tpo.id_tpobitocor = stg.TPOBITOCOR;
+        INSERT INTO circunstancia_obito (id_obito, id_circobito, id_acidtrab, id_fonte, id_tpobitocor)
+        SELECT 
+            map.id_obito, 
+            circ.id_circobito,
+            acid.id_acidtrab, 
+            f.id_fonte, 
+            tpo.id_tpobitocor
+        FROM ##stg_obitos_trans_conv AS stg
+        JOIN @ObitoMap AS map ON stg.stg_id = map.stg_id
+        LEFT JOIN circobito circ ON circ.id_circobito = stg.CIRCOBITO
+        LEFT JOIN acidtrab acid ON acid.id_acidtrab = stg.ACIDTRAB
+        LEFT JOIN fonte f ON f.id_fonte = stg.FONTE
+        LEFT JOIN tpobitocor tpo ON tpo.id_tpobitocor = stg.TPOBITOCOR;
     
-    INSERT INTO atestado (id_obito, id_necropsia, id_exame, id_cirurgia, id_atestante, id_assistmed, dtatestado, atestado, comunsvoim)
-    SELECT 
-        map.id_obito, 
-        stg.NECROPSIA, 
-        stg.EXAME, 
-        stg.CIRURGIA, 
-        stg.ATESTANTE, 
-        stg.ASSISTMED, 
-        stg.DTATESTADO, 
-        stg.ATESTADO, 
-        CASE
-            WHEN stg.ATESTANTE IN (3, 4) AND (stg.COMUNSVOIM IS NULL OR LTRIM(RTRIM(stg.COMUNSVOIM)) = '')
-            THEN 'N/A'
-            ELSE stg.COMUNSVOIM
-        END AS comunsvoim
-    FROM ##stg_obitos_trans_conv AS stg
-    JOIN @ObitoMap AS map ON stg.stg_id = map.stg_id;
+        INSERT INTO atestado (id_obito, id_necropsia, id_exame, id_cirurgia, id_atestante, id_assistmed, dtatestado, atestado, comunsvoim)
+        SELECT 
+            map.id_obito, 
+            stg.NECROPSIA, 
+            stg.EXAME, 
+            stg.CIRURGIA, 
+            stg.ATESTANTE, 
+            stg.ASSISTMED, 
+            stg.DTATESTADO, 
+            stg.ATESTADO, 
+            CASE
+                WHEN stg.ATESTANTE IN (3, 4) AND (stg.COMUNSVOIM IS NULL OR LTRIM(RTRIM(stg.COMUNSVOIM)) = '')
+                THEN 'N/A'
+                ELSE stg.COMUNSVOIM
+            END AS comunsvoim
+        FROM ##stg_obitos_trans_conv AS stg
+        JOIN @ObitoMap AS map ON stg.stg_id = map.stg_id;
     
-    INSERT INTO info_sistema(id_obito, id_fonteinv, id_tpresginfo, id_tpnivelinv, id_altcausa, id_stdoepidem, id_stdonova, id_tppos, id_origem, id_tp_altera, numerolote, dtinvestig, dtcadastro, stcodifica, codificado, versaosist, versaoscb, dtrecebim, dtrecoriga, opor_do, difdata, nudiasobco, dtcadinv, dtconinv, fontentrev, fonteambul, fontepront, fontesvo, fonteiml, fonteprof, dtcadinf, dtconcaso)
-    SELECT 
-        map.id_obito,
-        fi.id_fonteinv,
-        tpi.id_tpresginfo, 
-        tpn.id_tpnivelinv, 
-        alt.id_altcausa,
-        epi.id_stdoepidem, 
-        nova.id_stdonova, 
-        pos.id_tppos, 
-        org.id_origem, 
-        tpa.id_tp_altera,
-        stg.NUMEROLOTE,
-        stg.DTINVESTIG, 
-        stg.DTCADASTRO, 
-        stg.STCODIFICA, 
-        stg.CODIFICADO,
-        stg.VERSAOSIST, 
-        stg.VERSAOSCB, 
-        stg.DTRECEBIM,
-        stg.DTRECORIGA,
-        stg.OPOR_DO,
-        stg.DIFDATA, 
-        stg.NUDIASOBCO, 
-        stg.DTCADINV, 
-        stg.DTCONINV, 
-        SUBSTRING(stg.FONTES, 1, 1), SUBSTRING(stg.FONTES, 2, 1), SUBSTRING(stg.FONTES, 3, 1), 
-        SUBSTRING(stg.FONTES, 4, 1), SUBSTRING(stg.FONTES, 5, 1), SUBSTRING(stg.FONTES, 6, 1), 
-        stg.DTCADINF, 
-        stg.DTCONCASO
-    FROM ##stg_obitos_trans_conv AS stg
-    JOIN @ObitoMap AS map ON stg.stg_id = map.stg_id
-    LEFT JOIN fonteinv fi ON fi.id_fonteinv = stg.FONTEINV
-    LEFT JOIN tpresginfo tpi ON tpi.id_tpresginfo = stg.TPRESGINFO
-    LEFT JOIN tpnivelinv tpn ON tpn.id_tpnivelinv = stg.TPNIVELINV
-    LEFT JOIN altcausa alt ON alt.id_altcausa = stg.ALTCAUSA
-    LEFT JOIN stdoepidem epi ON epi.id_stdoepidem = stg.STDOEPIDEM
-    LEFT JOIN stdonova nova ON nova.id_stdonova = stg.STDONOVA
-    LEFT JOIN tppos pos ON pos.id_tppos = stg.TPPOS
-    LEFT JOIN origem org ON org.id_origem = stg.ORIGEM
-    LEFT JOIN tp_altera tpa ON tpa.id_tp_altera = stg.TP_ALTERA;
+        INSERT INTO info_sistema(id_obito, id_fonteinv, id_tpresginfo, id_tpnivelinv, id_altcausa, id_stdoepidem, id_stdonova, id_tppos, id_origem, id_tp_altera, numerolote, dtinvestig, dtcadastro, stcodifica, codificado, versaosist, versaoscb, dtrecebim, dtrecoriga, opor_do, difdata, nudiasobco, dtcadinv, dtconinv, fontentrev, fonteambul, fontepront, fontesvo, fonteiml, fonteprof, dtcadinf, dtconcaso)
+        SELECT 
+            map.id_obito,
+            fi.id_fonteinv,
+            tpi.id_tpresginfo, 
+            tpn.id_tpnivelinv, 
+            alt.id_altcausa,
+            epi.id_stdoepidem, 
+            nova.id_stdonova, 
+            pos.id_tppos, 
+            org.id_origem, 
+            tpa.id_tp_altera,
+            stg.NUMEROLOTE,
+            stg.DTINVESTIG, 
+            stg.DTCADASTRO, 
+            stg.STCODIFICA, 
+            stg.CODIFICADO,
+            stg.VERSAOSIST, 
+            stg.VERSAOSCB, 
+            stg.DTRECEBIM,
+            stg.DTRECORIGA,
+            stg.OPOR_DO,
+            stg.DIFDATA, 
+            stg.NUDIASOBCO, 
+            stg.DTCADINV, 
+            stg.DTCONINV, 
+            SUBSTRING(stg.FONTES, 1, 1), SUBSTRING(stg.FONTES, 2, 1), SUBSTRING(stg.FONTES, 3, 1), 
+            SUBSTRING(stg.FONTES, 4, 1), SUBSTRING(stg.FONTES, 5, 1), SUBSTRING(stg.FONTES, 6, 1), 
+            stg.DTCADINF, 
+            stg.DTCONCASO
+        FROM ##stg_obitos_trans_conv AS stg
+        JOIN @ObitoMap AS map ON stg.stg_id = map.stg_id
+        LEFT JOIN fonteinv fi ON fi.id_fonteinv = stg.FONTEINV
+        LEFT JOIN tpresginfo tpi ON tpi.id_tpresginfo = stg.TPRESGINFO
+        LEFT JOIN tpnivelinv tpn ON tpn.id_tpnivelinv = stg.TPNIVELINV
+        LEFT JOIN altcausa alt ON alt.id_altcausa = stg.ALTCAUSA
+        LEFT JOIN stdoepidem epi ON epi.id_stdoepidem = stg.STDOEPIDEM
+        LEFT JOIN stdonova nova ON nova.id_stdonova = stg.STDONOVA
+        LEFT JOIN tppos pos ON pos.id_tppos = stg.TPPOS
+        LEFT JOIN origem org ON org.id_origem = stg.ORIGEM
+        LEFT JOIN tp_altera tpa ON tpa.id_tp_altera = stg.TP_ALTERA;
 
-    INSERT INTO cid_causa (id_obito, id_tipo_linha, cid_cod, causabas, causabas_original, cb_alt)
-    SELECT
-        map.id_obito,
-        unpvt.id_tipo_linha,
-        unpvt.cid_cod,
-        cid.subcat,        
-        cid_o.subcat, 
-        stg.CB_ALT
-    FROM ##stg_obitos_trans_conv AS stg
-    JOIN @ObitoMap AS map ON stg.stg_id = map.stg_id
-    LEFT JOIN dbo.cid10_subcategorias AS cid ON stg.CAUSABAS = cid.subcat
-    LEFT JOIN dbo.cid10_subcategorias AS cid_o ON stg.CAUSABAS_O = cid_o.subcat
-    CROSS APPLY (
-        VALUES
-            (1, stg.LINHAA), (2, stg.LINHAB), (3, stg.LINHAC),
-            (4, stg.LINHAD), (5, stg.LINHAII)
-    ) AS unpvt(id_tipo_linha, cid_cod)
-    WHERE unpvt.cid_cod IS NOT NULL;
+        INSERT INTO cid_causa (id_obito, id_tipo_linha, cid_cod, causabas, causabas_original, cb_alt)
+        SELECT
+            map.id_obito,
+            unpvt.id_tipo_linha,
+            unpvt.cid_cod,
+            cid.subcat,        
+            cid_o.subcat, 
+            stg.CB_ALT
+        FROM ##stg_obitos_trans_conv AS stg
+        JOIN @ObitoMap AS map ON stg.stg_id = map.stg_id
+        LEFT JOIN dbo.cid10_subcategorias AS cid ON stg.CAUSABAS = cid.subcat
+        LEFT JOIN dbo.cid10_subcategorias AS cid_o ON stg.CAUSABAS_O = cid_o.subcat
+        CROSS APPLY (
+            VALUES
+                (1, stg.LINHAA), (2, stg.LINHAB), (3, stg.LINHAC),
+                (4, stg.LINHAD), (5, stg.LINHAII)
+        ) AS unpvt(id_tipo_linha, cid_cod)
+        WHERE unpvt.cid_cod IS NOT NULL;
+
+        COMMIT TRANSACTION;
+        PRINT 'Carga de óbitos concluída com sucesso. Todas as alterações foram salvas.';
+
+    END TRY
+    BEGIN CATCH
+
+        IF @@TRANCOUNT > 0
+            ROLLBACK TRANSACTION;
+        PRINT 'Ocorreu um erro durante a carga. Todas as alterações foram desfeitas.';
+        THROW;
+    END CATCH;
+
+
 END
 GO
 
@@ -615,11 +632,29 @@ CREATE OR ALTER PROCEDURE sp_ETL_obitos
     @caminhoArquivo VARCHAR(500)
 AS
 BEGIN
-EXEC sp_Extract_Obitos_from_CSV @CaminhoArquivoCSV = @caminhoArquivo
-EXEC sp_Transform_Obitos
-EXEC sp_load_obitos
-DROP TABLE ##stg_obitos_trans_conv;
-END
+    SET NOCOUNT ON;
+
+    BEGIN TRY
+        EXEC sp_Extract_Obitos_from_CSV @CaminhoArquivoCSV = @caminhoArquivo;
+        EXEC sp_Transform_Obitos;
+        EXEC sp_load_obitos;
+
+        -- O Drop da tabela só acontece se TUDO deu certo
+        DROP TABLE ##stg_obitos_trans_conv;
+
+        PRINT 'Processo de ETL concluído com SUCESSO.';
+
+    END TRY
+    BEGIN CATCH
+        PRINT '============================================================';
+        PRINT 'ERRO CRÍTICO NO PROCESSO DE ETL. A OPERAÇÃO FOI INTERROMPIDA.';
+        PRINT 'As tabelas temporárias ##stg... podem ainda existir para análise.';
+        PRINT '============================================================';
+        
+        -- Re-lança o erro original para sabermos o que aconteceu
+        THROW;
+    END CATCH
+END;
 GO
 
 
