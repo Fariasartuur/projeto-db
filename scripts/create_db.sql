@@ -13,10 +13,18 @@ GO
 USE mortalidade;
 GO
 
+
+
 CREATE TABLE municipio (
 	cod_municipio CHAR(7) PRIMARY KEY,
 	nome_municipio VARCHAR(60),
 	uf CHAR(2)
+);
+
+CREATE TABLE cnes_estabelecimento (
+	codigo_cnes CHAR(8) PRIMARY KEY,
+	nome_razaosocial VARCHAR(256),
+	nome_fantasia VARCHAR(256)
 );
 
 CREATE TABLE tipobito (
@@ -56,6 +64,7 @@ CREATE TABLE cid_causa (
 	causabas CHAR(4),
 	causabas_original CHAR(4),
 	cb_alt VARCHAR(10),
+	causamat CHAR(4),
 
 
     CONSTRAINT FK_causabas_cid10 FOREIGN KEY(causabas)
@@ -173,7 +182,8 @@ CREATE TABLE escolaridade_falecido (
 	CONSTRAINT FK_escolaridade_escfalagr1 FOREIGN KEY(id_escfalagr1)
 	REFERENCES escfalagr1 (id_escfalagr1)
 
-);
+);
+
 
 CREATE TABLE idade_unidade (
     id_idade_unidade TINYINT PRIMARY KEY,
@@ -344,7 +354,7 @@ CREATE TABLE mae (
 	qtdfilmorto TINYINT,
 	semagestac TINYINT,
 	peso SMALLINT,
-	causamat VARCHAR(4),
+	
 
 	CONSTRAINT FK_mae_ocupmae FOREIGN KEY(ocupmae)
     REFERENCES cbo2002 (codigo),
@@ -435,6 +445,9 @@ CREATE TABLE atestado (
 	CONSTRAINT FK_atestado_assistmed FOREIGN KEY(id_assistmed)
 	REFERENCES assistmed (id_assistmed),
 
+	CONSTRAINT FK_atestado_comunsvoim_municipio FOREIGN KEY(comunsvoim)
+	REFERENCES municipio (cod_municipio),
+
 	CONSTRAINT CHK_Comunsvoim_Obrigatorio
 	CHECK (id_atestante NOT IN (3, 4) OR comunsvoim IS NOT NULL)
 
@@ -470,11 +483,6 @@ CREATE TABLE stdonova (
 	descricao VARCHAR(50)
 );
 
-CREATE TABLE tppos (
-	id_tppos CHAR(1) PRIMARY KEY,
-	descricao VARCHAR(50)
-);
-
 CREATE TABLE origem (
 	id_origem TINYINT PRIMARY KEY,
 	descricao VARCHAR(50)
@@ -493,10 +501,10 @@ CREATE TABLE info_sistema (
 	id_altcausa TINYINT,
 	id_stdoepidem TINYINT,
 	id_stdonova TINYINT,
-	id_tppos CHAR(1),
 	id_origem TINYINT,
 	id_tp_altera TINYINT,
 
+	tppos CHAR(1),
 	numerolote VARCHAR(8),
 	dtinvestig DATE,
 	dtcadastro DATE,
@@ -541,9 +549,6 @@ CREATE TABLE info_sistema (
 	CONSTRAINT FK_info_stdoepidem FOREIGN KEY(id_stdoepidem)
 	REFERENCES stdoepidem (id_stdoepidem),
 
-	CONSTRAINT FK_info_tppos FOREIGN KEY(id_tppos)
-	REFERENCES tppos (id_tppos),
-
 	CONSTRAINT FK_info_origem FOREIGN KEY(id_origem)
 	REFERENCES origem (id_origem),
 
@@ -565,6 +570,7 @@ VALUES
 	(4, 'Via publica'),
 	(5, 'Outros'),
 	(6, 'Aldeia indigena'),
+	(7, 'Estabelecimento não identificado'),
 	(9, 'Ignorado');
 
 INSERT INTO circobito (id_circobito, descricao)
@@ -611,7 +617,7 @@ INSERT INTO sexo ( id_sexo, descricao)
 VALUES 
 	(1, 'Masculino'),
 	(2, 'Feminino'), 
-	(0, 'Ignorado'),
+	(0, 'Indefinido'),
 	(9, 'Ignorado');
 
 
@@ -828,11 +834,6 @@ VALUES
 	('E', 'Estadual'), 
 	('R', 'Regional'), 
 	('M', 'Municipal');
-
-INSERT INTO tppos (id_tppos, descricao)
-VALUES 
-	('S', 'Sim'), 
-	('N', 'Não');
 
 INSERT INTO origem (id_origem, descricao)
 VALUES 

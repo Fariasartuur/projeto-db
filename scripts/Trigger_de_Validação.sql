@@ -1,6 +1,41 @@
 USE mortalidade
 GO
 
+-- Apaga a VIEW antiga e simplificada
+IF OBJECT_ID('vw_ObitoCompleto', 'V') IS NOT NULL
+    DROP VIEW vw_ObitoCompleto;
+GO
+
+-- Recria a VIEW expondo as duas colunas da idade
+CREATE VIEW vw_ObitoCompleto AS
+SELECT
+    -- Colunas da tabela OBITO
+    o.id_obito,
+    o.id_tipobito,
+    o.dtobito,
+    o.horaobito,
+
+    -- Colunas da tabela PESSOA_FALECIDA
+    pf.dtnasc,
+    pf.id_sexo,
+    pf.id_estciv,
+    pf.id_racacor,
+    pf.codmunres,
+    pf.ocup,
+    pf.id_escol,
+
+    -- Colunas da tabela IDADE (agora de forma completa)
+    id.id_idade_unidade, -- <-- A UNIDADE DA IDADE
+    id.quantidade AS idade_quantidade -- <-- O VALOR NUMÉRICO
+
+FROM
+    obito AS o
+LEFT JOIN
+    pessoa_falecida AS pf ON o.id_obito = pf.id_obito
+LEFT JOIN
+    idade AS id ON pf.id_idade = id.id_idade;
+GO
+
 IF OBJECT_ID('trg_Valida_vw_ObitoCompleto', 'TR') IS NOT NULL
     DROP TRIGGER trg_Valida_vw_ObitoCompleto;
 GO
@@ -92,6 +127,136 @@ BEGIN
         INSERT INTO pessoa_falecida (id_obito, dtnasc, id_sexo, id_estciv, id_racacor, codmunres, ocup, id_idade, id_escol)
         SELECT m.new_obito_id, i.dtnasc, i.id_sexo, i.id_estciv, i.id_racacor, i.codmunres, i.ocup, m.new_idade_id, m.new_escol_id
         FROM #inserted_temp AS i INNER JOIN @IdMap AS m ON i.temp_id = m.temp_id;
+    END
+END;
+GO
+
+IF OBJECT_ID ('dbo.trg_check_ocupacao_idade', 'TR') IS NOT NULL
+   DROP TRIGGER dbo.trg_check_ocupacao_idade;
+GO
+
+CREATE TRIGGER trg_check_ocupacao_idade
+ON pessoa_falecida
+AFTER INSERT, UPDATE
+AS
+BEGIN
+    DECLARE @ocup CHAR(6);
+    DECLARE @id_idade INT;
+    DECLARE @idade_quantidade INT;
+    DECLARE @idade_unidade TINYINT;
+    DECLARE @id_obito INT;
+
+    SELECT
+        @id_obito = i.id_obito,
+        @ocup = i.ocup,
+        @id_idade = i.id_idade
+    FROM
+        inserted i;
+
+    IF @ocup IS NOT NULL AND @id_idade IS NOT NULL
+    BEGIN
+        SELECT
+            @idade_quantidade = ida.quantidade,
+            @idade_unidade = ida.id_idade_unidade
+        FROM
+            idade ida
+        WHERE
+            ida.id_idade = @id_idade;
+
+        IF @idade_unidade IN (4, 5) AND @idade_quantidade < 5
+        BEGIN
+            ROLLBACK TRANSACTION;
+            RAISERROR ('O campo OCUP (ocupação) só pode ser preenchido para falecidos com 5 anos de idade ou mais.', 16, 1);
+            RETURN;
+        END
+    END
+END;
+GO
+
+IF OBJECT_ID ('dbo.trg_check_idade_obito_fetal', 'TR') IS NOT NULL
+   DROP TRIGGER dbo.trg_check_idade_obito_fetal;
+GO
+
+CREATE TRIGGER trg_check_idade_obito_fetal
+ON pessoa_falecida
+AFTER INSERT, UPDATE
+AS
+BEGIN
+    DECLARE @id_obito INT;
+    DECLARE @id_idade INT;
+    DECLARE @id_tipobito TINYINT;
+
+    SELECT
+        @id_obito = i.id_obito,
+        @id_idade = i.id_idade
+    FROM
+        inserted i;
+
+    SELECT
+        @id_tipobito = o.id_tipobito
+    FROM
+        obito o
+    WHERE
+        o.id_obito = @id_obito;
+
+    IF @id_tipobito = 1 AND @id_idade IS NOT NULL
+    BEGIN
+        ROLLBACK TRANSACTION;
+        RAISERROR ('O campo de idade (id_idade) não deve ser preenchido para óbito fetal (id_tipobito = 1).', 16, 1);
+        RETURN;
+    END
+END;
+GO
+
+IF OBJECT_ID ('dbo.trg_check_tpmorteoco_mulher_fertil', 'TR') IS NOT NULL
+   DROP TRIGGER dbo.trg_check_tpmorteoco_mulher_fertil;
+GO
+
+CREATE TRIGGER trg_check_tpmorteoco_mulher_fertil
+ON mae
+AFTER INSERT, UPDATE
+AS
+BEGIN
+    DECLARE @id_obito INT;
+    DECLARE @id_tpmorteoco TINYINT;
+    DECLARE @id_sexo TINYINT;
+    DECLARE @id_idade INT;
+    DECLARE @idade_quantidade INT;
+    DECLARE @idade_unidade TINYINT;
+
+    SELECT
+        @id_obito = i.id_obito,
+        @id_tpmorteoco = i.id_tpmorteoco
+    FROM
+        inserted i;
+
+    IF @id_tpmorteoco IS NULL
+    BEGIN
+        SELECT
+            @id_sexo = pf.id_sexo,
+            @id_idade = pf.id_idade
+        FROM
+            pessoa_falecida pf
+        WHERE
+            pf.id_obito = @id_obito;
+
+        IF @id_sexo = 2 AND @id_idade IS NOT NULL
+        BEGIN
+            SELECT
+                @idade_quantidade = ida.quantidade,
+                @idade_unidade = ida.id_idade_unidade
+            FROM
+                idade ida
+            WHERE
+                ida.id_idade = @id_idade;
+
+            IF @idade_unidade IN (4, 5) AND (@idade_quantidade BETWEEN 10 AND 49)
+            BEGIN
+                ROLLBACK TRANSACTION;
+                RAISERROR ('O campo "TPMORTEOCO" (A morte ocorreu) é de preenchimento obrigatório para óbitos de mulheres em idade fértil (10 a 49 anos).', 16, 1);
+                RETURN;
+            END
+        END
     END
 END;
 GO

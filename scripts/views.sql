@@ -327,37 +327,3 @@ WHERE m.id_tpmorteoco IN (1, 2, 3, 4, 5)
 GROUP BY COALESCE(em.descricao, 'Escolaridade Ignorada');
 GO
 
--- Apaga a VIEW antiga e simplificada
-IF OBJECT_ID('vw_ObitoCompleto', 'V') IS NOT NULL
-    DROP VIEW vw_ObitoCompleto;
-GO
-
--- Recria a VIEW expondo as duas colunas da idade
-CREATE VIEW vw_ObitoCompleto AS
-SELECT
-    -- Colunas da tabela OBITO
-    o.id_obito,
-    o.id_tipobito,
-    o.dtobito,
-    o.horaobito,
-
-    -- Colunas da tabela PESSOA_FALECIDA
-    pf.dtnasc,
-    pf.id_sexo,
-    pf.id_estciv,
-    pf.id_racacor,
-    pf.codmunres,
-    pf.ocup,
-    pf.id_escol,
-
-    -- Colunas da tabela IDADE (agora de forma completa)
-    id.id_idade_unidade, -- <-- A UNIDADE DA IDADE
-    id.quantidade AS idade_quantidade -- <-- O VALOR NUMÉRICO
-
-FROM
-    obito AS o
-LEFT JOIN
-    pessoa_falecida AS pf ON o.id_obito = pf.id_obito
-LEFT JOIN
-    idade AS id ON pf.id_idade = id.id_idade;
-GO
