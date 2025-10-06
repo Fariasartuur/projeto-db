@@ -116,7 +116,8 @@ O projeto foi organizado em 13 semanas, seguindo um cronograma que garante a evo
  
 ### Plano de Analise e Dicionario de Dados
 - **[Plano de Análise](docs/arquivos/plano_de_analise.pdf):** Perguntas de negócio e métricas a serem extraídas.
-- **[Dicionário de Dados](docs/arquivos/dicionario_mortalidade.pdf):** Descrição completa dos campos do dataset, tipos de dados e relações entre tabelas.
+- **[Dicionário de Dados](docs/arquivos/dicionario_mortalidade.xlsx):** Descrição completa dos campos do dataset, tipos de dados e relações entre tabelas.
+  - [Arquivo MarkDown](dicionario_mortalidade.md) do dicionario.
   
 ### ⚙️ Scripts e Ordem de Execução
 
@@ -126,47 +127,55 @@ Para configurar o banco de dados e executar o ETL, siga a ordem abaixo:
 - **[Arquivo](scripts/create_db.sql):** **`scripts/create_db.sql`**
 - **Descrição:** Script único responsável pela criação do banco de dados `mortalidade`, de todas as tabelas, `chave`, `constraints`, `checks` e pela inserção dos dados em todas as tabelas de domínio.
 
-**Passo 2: Criação das Stored Procedures do ETL**
+**Passo 2: Execução do script de criação dos Triggers**
+- **[Trigger de Auditoria](scripts/Trigger_de_Auditoria.sql):** **`scripts/Trigger_de_Auditoria.sql`**
+- **[Trigger de Validação](scripts/Trigger_de_Validação.sql):** **`scripts/Trigger_de_Validação.sql`**
+- **Descrição:** Este passo executa os scripts que criam dois gatilhos automáticos: um de auditoria, para registrar um histórico completo de todas as alterações feitas nos dados, e um de validação, para garantir a integridade das informações aplicando regras de negócio antes de serem salvas.
+
+**Passo 3: Criação das Stored Procedures do ETL**
 - **[Arquivo](scripts/StoredProcedureMunicipio.sql):** **`scripts/StoredProcedureMunicipio.sql`**
   - **Descrição:** Cria a Stored Procedure que realiza a etapa de **Extração (Extract)**, **Transformação (Transform)** e **Carga (Load)** dos dados dos [municipios](datasets/BR_Municipios_2024.csv).
 - **[Arquivo](scripts/StoredProcedureCID10.sql):** **`scripts/StoredProcedureCID10.sql`**
   - **Descrição:** Cria a Stored Procedure que realiza a etapa de **Extração (Extract)**, **Transformação (Transform)** e **Carga (Load)** dos dados do [CID](datasets/CID-10-SUBCATEGORIAS.CSV).
 - **[Arquivo](scripts/StoredProcedureCBO2002.sql):** **`scripts/StoredProcedureCBO2002.sql`**
   - **Descrição:** Cria a Stored Procedure que realiza a etapa de **Extração (Extract)**, **Transformação (Transform)** e **Carga (Load)** dos dados da [CBO](datasets/cbo2002-ocupacao.csv).
+- **[Arquivo](scripts/StoredProcedureCNES.sql):** **`scripts/StoredProcedureCNES.sql`**
+  - **Descrição:** Cria a Stored Procedure que realiza a etapa de **Extração (Extract)**, **Transformação (Transform)** e **Carga (Load)** dos dados da [CNES](https://opendatasus.saude.gov.br/dataset/cnes-cadastro-nacional-de-estabelecimentos-de-saude#).
 - **[Arquivo](scripts/StoredProcedureObito.sql):** **`scripts/StoredProcedureObito.sql`**
-  - **Descrição:** Cria a Stored Procedure que realiza a etapa de **Extração (Extract)**, **Transformação (Transform)** e **Carga (Load)** dos dados dos óbitos.
+  - **Descrição:** Cria a Stored Procedure que realiza a etapa de **Extração (Extract)**, **Transformação (Transform)** e **Carga (Load)** dos dados dos [obitos](https://s3.sa-east-1.amazonaws.com/ckan.saude.gov.br/SIM/csv/DO24OPEN_csv.zip).
 
-**Passo 3: Execução do ETL Completo**
+**Passo 4: Execução do ETL Completo**
 - **[Arquivo](scripts/execucao_etl.sql):** **`scripts/execucao_etl.sql`**
 - **Descrição:** Este script orquestra todo o processo de carga, executando as Stored Procedures mestras na ordem correta. É o único script que precisa ser executado para popular o Data Warehouse após a configuração inicial.
 - **Como Executar:**
 1. Abra o arquivo. 
-2. **Importante:** Altere as variáveis `@CaminhoArquivoMunicipios`, `@CaminhoArquivoCBO`, `@CaminhoArquivoCID` e `@CaminhoArquivoObitos` para que apontem para os locais corretos dos seus arquivos CSV.
+2. **Importante:** Altere as variáveis `@CaminhoArquivoMunicipios`, `@CaminhoArquivoCBO`, `@CaminhoArquivoCID`, `@CaminhoArquivoCNES` e `@CaminhoArquivoObitos` para que apontem para os locais corretos dos seus arquivos CSV.
 3. Execute o script completo.
 
-**Passo 4: Execução do script de criação de índices (Index)**
+**Passo 5: Execução do script de criação de índices (Index)**
 - **[Arquivo](scripts/create_indexes.sql):** **`scripts/create_indexes.sql`**
 - **Descrição:** Esse script faz a criação dos indices no qual vão otimizar as buscas necessarias para a analise dos dados.
 
-**Passo 5: Execução do script de criação das Exibições (Views)**
+**Passo 6: Execução do script de criação das Exibições (Views)**
 - **[Arquivo](scripts/views.sql):** **`scripts/views.sql`**
 - **Descrição:** Esse script faz a criação das exibições (views) no qual vão responder as perguntas do [plano de analise](docs/arquivos/plano_de_analise.pdf) e de outros views usados futuramente.
 
-**Passo 6: Execução do script de criação dos Triggers**
-- **[Trigger de Auditoria](scripts/Trigger_de_Auditoria.sql):** **`scripts/Trigger_de_Auditoria.sql`**
-- **[Trigger de Validação](scripts/Trigger_de_Validação.sql):** **`scripts/Trigger_de_Validação.sql`**
-- **Descrição:** Este passo executa os scripts que criam dois gatilhos automáticos: um de auditoria, para registrar um histórico completo de todas as alterações feitas nos dados, e um de validação, para garantir a integridade das informações aplicando regras de negócio antes de serem salvas.
+### 📁 Datasets
 
-### ⚙️ Scripts Extras
+**Dataset dos Obitos:**
+- **[DO24OPEN](https://s3.sa-east-1.amazonaws.com/ckan.saude.gov.br/SIM/csv/DO24OPEN_csv.zip)**
 
-**Script Select: Script com os Selects para visualizar todas as tabelas de dominio e tabelas como a de municipio, codigos CBO e CID**
-- **[Arquivo](scripts/consult_tbd.sql):** **`scripts/consult_tbd.sql`**
+**Dataset dos Municipios:**
+- **[BR_Municipios_2024](datasets/BR_Municipios_2024.csv)**
 
-**Script DQL: Script com os Selects usados na DQL**
-- **[Arquivo](scripts/DQL.sql):** **`scripts/DQL.sql`**
+**Dataset dos Codigos Internacional de Doencas:**
+- **[CID-10-SUBCATEGORIA](datasets/CID-10-SUBCATEGORIAS.CSV)**
 
-**Script Reports: Script com a execução de cada view criada usada para responder as perguntas do plano de analise.**
-- **[Arquivo](scripts/run_reports.sql):** **`scripts/run_reports.sql`**
+**Dataset dos Codigos da Classificação Brasileira de Ocupações:**
+- **[cbo2002-ocupacao](datasets/cbo2002-ocupacao.csv)**
+
+**Dataset dos Codigos do Cadastro Nacional de Estabelecimentos de Saúde:**
+- **[cnes_estabelecimentos](https://opendatasus.saude.gov.br/dataset/cnes-cadastro-nacional-de-estabelecimentos-de-saude#)**
 
   
 > Observação: Todos os documentos estão versionados e disponíveis no repositório do GitHub
