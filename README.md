@@ -31,7 +31,7 @@ O projeto foi organizado em quatro grandes **eixos de investigação**, cada um 
 - **Pergunta 1.4:** Quais são as ocupações (CBO) mais frequentes entre os óbitos por acidentes de trabalho?  
 
 ### **Eixo 2: Análise Geográfica e de Local de Ocorrência**  
-- **Pergunta 2.1:** Qual o ranking de municípios com as maiores taxas de mortalidade por causas violentas (homicídios, suicídios, acidentes)?  
+- **Pergunta 2.1:** Qual o ranking de municípios com os maiores números de mortalidade por causas violentas (homicídios, suicídios, acidentes)?  
 - **Pergunta 2.2:** Qual a porcentagem de óbitos que ocorrem fora de um estabelecimento de saúde (domicílio, via pública) por município de residência? Isso pode indicar um acesso precário ao sistema de saúde?  
 - **Pergunta 2.3:** Existe uma diferença entre o município de residência e o município de ocorrência do óbito? Análises sobre este fluxo podem indicar a busca por atendimento médico em outras cidades.  
 
