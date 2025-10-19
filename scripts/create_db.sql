@@ -13,12 +13,11 @@ GO
 USE mortalidade;
 GO
 
-
-
 CREATE TABLE municipio (
 	cod_municipio CHAR(7) PRIMARY KEY,
 	nome_municipio VARCHAR(60),
-	uf CHAR(2)
+	uf CHAR(2),
+	nome_uf VARCHAR(60)
 );
 
 CREATE TABLE cnes_estabelecimento (

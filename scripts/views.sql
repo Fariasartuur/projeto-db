@@ -115,21 +115,21 @@ GO
 CREATE OR ALTER VIEW vw_2_1_ranking_municipios_causas_violentas AS
 SELECT
     ISNULL(m.nome_municipio, 'Município de Ocorrência Faltando') AS municipio_ocorrencia,
-    ISNULL(m.uf, 'UF') as uf,
+    ISNULL(m.nome_uf, 'UF') as nome_uf,
     COUNT(o.id_obito) AS total_obitos_violentos
 FROM obito o
 JOIN circunstancia_obito co ON o.id_obito = co.id_obito
 LEFT JOIN local_ocorrencia lo ON o.id_obito = lo.id_obito
 LEFT JOIN municipio m ON lo.codmunocor = m.cod_municipio
 WHERE co.id_circobito IN (1, 2, 3)
-GROUP BY m.nome_municipio, m.uf;
+GROUP BY m.nome_municipio, m.nome_uf;
 GO
 
 -- VIEW para a Pergunta 2.2: Percentual de óbitos fora de estabelecimento de saúde por município.
 CREATE OR ALTER VIEW vw_2_2_percentual_obitos_fora_estab_saude AS
 SELECT
     m.nome_municipio AS municipio_residencia,
-    m.uf,
+    m.nome_uf,
     COUNT(o.id_obito) AS total_de_obitos,
     SUM(CASE WHEN lo.id_lococor NOT IN (1, 2) THEN 1 ELSE 0 END) AS obitos_fora_estab_saude,
     (SUM(CASE WHEN lo.id_lococor NOT IN (1, 2) THEN 1 ELSE 0 END) * 100.0) / COUNT(o.id_obito) AS percentual_fora_estab_saude
@@ -137,7 +137,7 @@ FROM obito o
 JOIN pessoa_falecida pf ON o.id_obito = pf.id_obito
 JOIN municipio m ON pf.codmunres = m.cod_municipio
 JOIN local_ocorrencia lo ON o.id_obito = lo.id_obito
-GROUP BY m.nome_municipio, m.uf
+GROUP BY m.nome_municipio, m.nome_uf
 HAVING COUNT(o.id_obito) > 50;
 GO
 
@@ -145,9 +145,9 @@ GO
 CREATE OR ALTER VIEW vw_2_3_fluxo_obitos_residencia_ocorrencia AS
 SELECT 
     mun_res.nome_municipio AS municipio_residencia,
-    mun_res.uf AS uf_residencia,
+    mun_res.nome_uf AS nome_uf_residencia,
     mun_ocor.nome_municipio AS municipio_ocorrencia,
-    mun_ocor.uf AS uf_ocorrencia,
+    mun_ocor.nome_uf AS nome_uf_ocorrencia,
     COUNT(o.id_obito) AS total_obitos_em_transito
 FROM obito o
 JOIN pessoa_falecida pf ON o.id_obito = pf.id_obito
@@ -155,7 +155,7 @@ JOIN local_ocorrencia lo ON o.id_obito = lo.id_obito
 JOIN municipio mun_res ON pf.codmunres = mun_res.cod_municipio
 JOIN municipio mun_ocor ON lo.codmunocor = mun_ocor.cod_municipio
 WHERE pf.codmunres <> lo.codmunocor
-GROUP BY mun_res.nome_municipio, mun_res.uf, mun_ocor.nome_municipio, mun_ocor.uf;
+GROUP BY mun_res.nome_municipio, mun_res.nome_uf, mun_ocor.nome_municipio, mun_ocor.nome_uf;
 GO
 
 --------------------------------------------------------------------------------
@@ -313,6 +313,7 @@ GO
 -- VIEW para a Pergunta 4.4: Perfil de mães em óbitos maternos.
 CREATE OR ALTER VIEW vw_4_4_perfil_maes_obitos_maternos AS
 SELECT
+    COALESCE(em.id_escmae2010, '99') AS id_escolaridade,
     COALESCE(em.descricao, 'Escolaridade Ignorada') AS escolaridade_predominante,
     AVG(m.idademae) AS media_idade_mae,
     AVG(m.qtdfilvivo) AS media_filhos_vivos,
@@ -324,6 +325,11 @@ JOIN tpmorteoco tmo ON m.id_tpmorteoco = tmo.id_tpmorteoco
 LEFT JOIN escolaridade_mae em_id ON m.id_escol_mae = em_id.id_escol_mae
 LEFT JOIN escmae2010 em ON em_id.id_escmae2010 = em.id_escmae2010
 WHERE m.id_tpmorteoco IN (1, 2, 3, 4, 5)
-GROUP BY COALESCE(em.descricao, 'Escolaridade Ignorada');
+GROUP BY
+    em.id_escmae2010,
+    em.descricao;
 GO
+
+
+
 

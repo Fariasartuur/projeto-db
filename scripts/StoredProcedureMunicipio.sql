@@ -10,20 +10,11 @@ CREATE PROCEDURE sp_extract_municipios
 AS
 BEGIN
     CREATE TABLE ##temp_municipio (
-        CD_MUN VARCHAR(MAX), 
-        NM_MUN VARCHAR(MAX), 
-        CD_RGI VARCHAR(MAX), 
-        NM_RGI VARCHAR(MAX), 
-        CD_RGINT VARCHAR(MAX),
-        NM_RGINT VARCHAR(MAX), 
-        CD_UF VARCHAR(MAX), 
-        NM_UF VARCHAR(MAX), 
-        SIGLA_UF VARCHAR(MAX), 
-        CD_REGIA VARCHAR(MAX),
-        NM_REGIA VARCHAR(MAX), 
-        SIGLA_RG VARCHAR(MAX), 
-        CD_CONCU VARCHAR(MAX), 
-        NM_CONCU VARCHAR(MAX)
+        CD_MUN NVARCHAR(MAX), 
+        NM_MUN NVARCHAR(MAX), 
+        CD_UF NVARCHAR(MAX), 
+        SIGLA_UF NVARCHAR(MAX), 
+        NM_UF NVARCHAR(MAX)
     );
 
     DECLARE @Sql NVARCHAR(MAX);
@@ -34,7 +25,7 @@ BEGIN
         FIRSTROW = 2,
         FIELDTERMINATOR = '';'',
         ROWTERMINATOR = ''\n'',
-        CODEPAGE = ''1252''
+        CODEPAGE = ''65001''
     );';
 
     EXEC sp_executesql @sql;
@@ -49,22 +40,24 @@ CREATE PROCEDURE sp_transform_municipios
 AS
 BEGIN
     ALTER TABLE ##temp_municipio
-    DROP COLUMN CD_RGI, NM_RGI, CD_RGINT,NM_RGINT, NM_UF, SIGLA_UF, CD_REGIA,NM_REGIA, SIGLA_RG, CD_CONCU, NM_CONCU;
+    DROP COLUMN SIGLA_UF;
 
     IF OBJECT_ID('tempdb..##temp_municipio_trans') IS NOT NULL
         DROP TABLE ##temp_municipio_trans;
 
     CREATE TABLE ##temp_municipio_trans (
             CD_MUN CHAR(7), 
-            NM_MUN VARCHAR(60), 
-            CD_UF CHAR(2)
+            NM_MUN NVARCHAR(60), 
+            CD_UF CHAR(2),
+            NM_UF VARCHAR(60)
         );
 
-    INSERT INTO ##temp_municipio_trans (CD_MUN, NM_MUN, CD_UF)
+    INSERT INTO ##temp_municipio_trans (CD_MUN, NM_MUN, CD_UF, NM_UF)
     SELECT 
         CAST(REPLACE(CD_MUN, '"', '') AS CHAR(7)),
-        CAST(REPLACE(NM_MUN, '"', '') AS VARCHAR(60)),
-        CAST(REPLACE(CD_UF, '"', '') AS CHAR(2))
+        CAST(REPLACE(NM_MUN, '"', '') AS NVARCHAR(60)),
+        CAST(REPLACE(CD_UF, '"', '') AS CHAR(2)),
+        CAST(REPLACE(NM_UF, '"', '') AS NVARCHAR(60))
     FROM ##temp_municipio;
 
     DROP TABLE ##temp_municipio;
@@ -78,11 +71,12 @@ GO
 CREATE PROCEDURE sp_load_municipios
 AS
 BEGIN
-    INSERT INTO municipio (cod_municipio, nome_municipio, uf)
+    INSERT INTO municipio (cod_municipio, nome_municipio, uf, nome_uf)
     SELECT
         temp.CD_MUN,
         temp.NM_MUN,
-        temp.CD_UF
+        temp.CD_UF,
+        temp.NM_UF
     FROM ##temp_municipio_trans AS temp
     WHERE NOT EXISTS (
         SELECT 1 
