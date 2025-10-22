@@ -160,6 +160,16 @@ Para configurar o banco de dados e executar o ETL, siga a ordem abaixo:
 - **[Arquivo](scripts/views.sql):** **`scripts/views.sql`**
 - **Descrição:** Esse script faz a criação das exibições (views) no qual vão responder as perguntas do [plano de analise](docs/arquivos/plano_de_analise.pdf) e de outros views usados futuramente.
 
+**Passo 7: Criação e Execução das Análises**
+- **[Arquivo](scripts/StoredProceduresAnaliticas.sql):** **`scripts/StoredProceduresAnaliticas.sql`**
+- **[Arquivo](scripts/ExecProceduresAnaliticas.sql):** **`ExecProceduresAnaliticas.sql`**
+- **Descrição:** Este passo cria e executa as 13 Stored Procedures analíticas, cada uma respondendo a uma pergunta do [plano de analise](docs/arquivos/plano_de_analise.pdf)
+
+**Passo 8: Configuração de Segurança**
+- **[Arquivo](scripts/segurança_dcl.sql):** **`scripts/segurança_dcl.sql`**
+- **Descrição:** Define os logins, usuários e as permissões de acesso ao banco de dados, conforme os requisitos do projeto.
+
+
 ### 📁 Datasets
 
 **Dataset dos Obitos:**

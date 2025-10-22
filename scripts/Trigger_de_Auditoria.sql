@@ -1,6 +1,10 @@
 USE mortalidade
 GO
 
+IF OBJECT_ID('Auditoria_Obito') IS NOT NULL
+    DROP TABLE Auditoria_Obito;
+GO
+
 CREATE TABLE Auditoria_Obito (
     id_auditoria INT IDENTITY PRIMARY KEY,
     id_obito INT,
