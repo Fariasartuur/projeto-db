@@ -166,7 +166,7 @@ Para configurar o banco de dados e executar o ETL, siga a ordem abaixo:
 - **Descrição:** Este passo cria e executa as 13 Stored Procedures analíticas, cada uma respondendo a uma pergunta do [plano de analise](docs/arquivos/plano_de_analise.pdf)
 
 **Passo 8: Configuração de Segurança**
-- **[Arquivo](scripts/segurança_dcl.sql):** **`scripts/segurança_dcl.sql`**
+- **[Arquivo](scripts/seguranca_dcl.sql):** **`scripts/segurança_dcl.sql`**
 - **Descrição:** Define os logins, usuários e as permissões de acesso ao banco de dados, conforme os requisitos do projeto.
 
 
