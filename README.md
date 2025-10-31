@@ -128,20 +128,20 @@ Para configurar o banco de dados e executar o ETL, siga a ordem abaixo:
 - **Descrição:** Script único responsável pela criação do banco de dados `mortalidade`, de todas as tabelas, `chave`, `constraints`, `checks` e pela inserção dos dados em todas as tabelas de domínio.
 
 **Passo 2: Execução do script de criação dos Triggers**
-- **[Trigger de Auditoria](scripts/Trigger_de_Auditoria.sql):** **`scripts/Trigger_de_Auditoria.sql`**
-- **[Trigger de Validação](scripts/Trigger_de_Validação.sql):** **`scripts/Trigger_de_Validação.sql`**
+- **[Trigger de Auditoria](scripts/trigger_auditoria.sql):** **`scripts/trigger_auditoria.sql`**
+- **[Trigger de Validação](scripts/trigger_validacao.sql):** **`scripts/trigger_validacao.sql`**
 - **Descrição:** Este passo executa os scripts que criam dois gatilhos automáticos: um de auditoria, para registrar um histórico completo de todas as alterações feitas nos dados, e um de validação, para garantir a integridade das informações aplicando regras de negócio antes de serem salvas.
 
 **Passo 3: Criação das Stored Procedures do ETL**
-- **[Arquivo](scripts/StoredProcedureMunicipio.sql):** **`scripts/StoredProcedureMunicipio.sql`**
+- **[Arquivo](scripts/sp_municipios.sql):** **`scripts/sp_municipios.sql`**
   - **Descrição:** Cria a Stored Procedure que realiza a etapa de **Extração (Extract)**, **Transformação (Transform)** e **Carga (Load)** dos dados dos [municipios](datasets/BR_Municipios_2024.csv).
-- **[Arquivo](scripts/StoredProcedureCID10.sql):** **`scripts/StoredProcedureCID10.sql`**
+- **[Arquivo](scripts/sp_cid10.sql):** **`scripts/sp_cid10.sql`**
   - **Descrição:** Cria a Stored Procedure que realiza a etapa de **Extração (Extract)**, **Transformação (Transform)** e **Carga (Load)** dos dados do [CID](datasets/CID-10-SUBCATEGORIAS.CSV).
-- **[Arquivo](scripts/StoredProcedureCBO2002.sql):** **`scripts/StoredProcedureCBO2002.sql`**
+- **[Arquivo](scripts/sp_cbo2002.sql):** **`scripts/sp_cbo2002.sql`**
   - **Descrição:** Cria a Stored Procedure que realiza a etapa de **Extração (Extract)**, **Transformação (Transform)** e **Carga (Load)** dos dados da [CBO](datasets/cbo2002-ocupacao.csv).
-- **[Arquivo](scripts/StoredProcedureCNES.sql):** **`scripts/StoredProcedureCNES.sql`**
+- **[Arquivo](scripts/sp_cnes.sql):** **`scripts/sp_cnes.sql`**
   - **Descrição:** Cria a Stored Procedure que realiza a etapa de **Extração (Extract)**, **Transformação (Transform)** e **Carga (Load)** dos dados da [CNES](https://opendatasus.saude.gov.br/dataset/cnes-cadastro-nacional-de-estabelecimentos-de-saude#).
-- **[Arquivo](scripts/StoredProcedureObito.sql):** **`scripts/StoredProcedureObito.sql`**
+- **[Arquivo](scripts/sp_obito.sql):** **`scripts/sp_obito.sql`**
   - **Descrição:** Cria a Stored Procedure que realiza a etapa de **Extração (Extract)**, **Transformação (Transform)** e **Carga (Load)** dos dados dos [obitos](https://s3.sa-east-1.amazonaws.com/ckan.saude.gov.br/SIM/csv/DO24OPEN_csv.zip).
 
 **Passo 4: Execução do ETL Completo**
@@ -161,8 +161,8 @@ Para configurar o banco de dados e executar o ETL, siga a ordem abaixo:
 - **Descrição:** Esse script faz a criação das exibições (views) no qual vão responder as perguntas do [plano de analise](docs/arquivos/plano_de_analise.pdf) e de outros views usados futuramente.
 
 **Passo 7: Criação e Execução das Análises**
-- **[Arquivo](scripts/StoredProceduresAnaliticas.sql):** **`scripts/StoredProceduresAnaliticas.sql`**
-- **[Arquivo](scripts/ExecProceduresAnaliticas.sql):** **`ExecProceduresAnaliticas.sql`**
+- **[Arquivo](scripts/sp_analiticas.sql):** **`scripts/sp_analiticas.sql`**
+- **[Arquivo](scripts/exec_proc_analiticas.sql):** **`exec_proc_analiticas.sql`**
 - **Descrição:** Este passo cria e executa as 13 Stored Procedures analíticas, cada uma respondendo a uma pergunta do [plano de analise](docs/arquivos/plano_de_analise.pdf)
 
 **Passo 8: Configuração de Segurança**

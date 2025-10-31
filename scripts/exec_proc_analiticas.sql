@@ -98,6 +98,10 @@ PRINT 'Executando Pergunta 4.3: Distribuição do peso ao nascer para óbitos no pr
 EXEC sp_4_3_distribuicao_peso_obitos_primeiro_ano;
 GO
 
+PRINT 'Executando Pergunta 4.4: Distribuição de mães cujos óbitos ocorreram durante a gravidez ou puerpério';
+EXEC sp_4_4_perfil_maes_obitos_maternos;
+GO
+
 PRINT '================================================================================';
 PRINT 'Execução do plano de análise concluída.';
 PRINT '================================================================================';
