@@ -123,10 +123,10 @@ GRANT EXECUTE ON OBJECT::sp_2_3_fluxo_obitos_residencia_ocorrencia TO role_anali
 GRANT EXECUTE ON OBJECT::sp_3_1_top10_causas_morte_faixa_etaria_sexo TO role_analista_dados;
 GRANT EXECUTE ON OBJECT::sp_3_2_relacao_assistencia_medica_causa_morte TO role_analista_dados;
 GRANT EXECUTE ON OBJECT::sp_3_3_fonte_informacao_causas_violentas TO role_analista_dados;
-GRANT EXECUTE ON OBJECT::sp_4_1_relacao_escolaridade_mae_obito_fetal TO role_analista_dados;
-GRANT EXECUTE ON OBJECT::sp_4_2_correlacao_parto_momento_obito TO role_analista_dados;
+GRANT EXECUTE ON OBJECT::sp_4_1_idade_mae_obito_infantil TO role_analista_dados;
+GRANT EXECUTE ON OBJECT::sp_4_2_obito_infantil_local_ocorrencia TO role_analista_dados;
 GRANT EXECUTE ON OBJECT::sp_4_3_distribuicao_peso_obitos_primeiro_ano TO role_analista_dados;
-GRANT EXECUTE ON OBJECT::sp_4_4_perfil_maes_obitos_maternos TO role_analista_dados;
+GRANT EXECUTE ON OBJECT::sp_4_4_idade_gestacional_obito_infantil TO role_analista_dados;
 PRINT 'Permissões de Analista (DENY DML, GRANT SELECT, GRANT EXECUTE Analíticas) concedidas.';
 GO
 
