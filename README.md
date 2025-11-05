@@ -65,7 +65,7 @@ O projeto foi organizado em 13 semanas, seguindo um cronograma que garante a evo
 | **Semana 9** | Criar triggers para auditoria/validação e controle de transações. |
 | **Semana 10** | Implementar a estratégia de segurança com logins, usuários e perfis. |
 | **Semana 11** | Finalizar a documentação. Iniciar a criação do dashboard de BI (opcional). |
-| **Semana 12** | Gravar o vídeo de demonstração e preparar a apresentação final. |
+| **Semana 12** | Preparar a apresentação final. |
 | **Semana 13** | Defesa do projeto, demonstrando o processo de ETL e os insights gerados pelas análises. |
 
 ---
