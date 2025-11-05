@@ -169,6 +169,20 @@ Para configurar o banco de dados e executar o ETL, siga a ordem abaixo:
 - **[Arquivo](scripts/seguranca_dcl.sql):** **`scripts/segurança_dcl.sql`**
 - **Descrição:** Define os logins, usuários e as permissões de acesso ao banco de dados, conforme os requisitos do projeto.
 
+### ⚙️ Scripts Extras
+
+**Script para consulta das tabelas de domínio**
+- **[Arquivo](scripts/consult_tbd.sql)** **`scripts/consult_tbd.sql`**
+- **Descrição:** Este script executa um SELECT em todas as tabelas de domínio (lookup tables) para exibir os valores de referência (ID vs. Descrição).
+  > Para tabelas grandes, é exibida uma amostra das primeiras 100 linhas
+
+**Validação da carga do ETL**
+- **[Arquivo](scripts/consultas_dql.sql)** **`scripts/consultas_dql.sql`**
+- **Descrição:** Este script garante que o processo de ETL foi executado com sucesso, os dados foram carregados e a integridade básica está mantida.
+
+**Execução das VIEWS**
+- **[Arquivo](scripts/run_reports.sql)** **`scripts/run_reports.sql`**
+- **Descrição:** Este script roda todas as views criadas usadas para a parte de analise do projeto.
 
 ### 📁 Datasets
 
