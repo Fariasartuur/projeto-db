@@ -41,10 +41,10 @@ O projeto foi organizado em quatro grandes **eixos de investigação**, cada um 
 - **Pergunta 3.3:** Óbitos por causas violentas estão mais associados a qual fonte de informação (ocorrência policial, hospital)?  
 
 ### **Eixo 4: Análise de Mortalidade Materno-Infantil**  
-- **Pergunta 4.1:** Qual a relação entre a escolaridade da mãe e a ocorrência de óbito fetal?  
-- **Pergunta 4.2:** O tipo de parto (vaginal ou cesáreo) tem correlação com o momento do óbito em relação ao parto (antes, durante ou depois)?  
+- **Pergunta 4.1:** Qual é a distribuição da idade materna entre os casos de óbitos no primeiro ano de vida? 
+- **Pergunta 4.2:** Onde esses óbitos ocorrem com maior frequência (hospital, domicílio, via pública)?  
 - **Pergunta 4.3:** Qual é a distribuição do peso ao nascer para óbitos não fetais que ocorrem no primeiro ano de vida?  
-- **Pergunta 4.4:** Qual é o perfil de mães (idade, escolaridade, número de filhos vivos e mortos) cujos óbitos ocorreram durante a gravidez ou puerpério?  
+- **Pergunta 4.4:** Como a idade gestacional se relaciona com a ocorrência de óbito infantil?  
 
 --- 
 
