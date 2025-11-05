@@ -87,11 +87,11 @@ PRINT '=========================================================================
 GO
 
 PRINT 'Executando Pergunta 4.1: Relação entre escolaridade da mãe e óbito fetal.';
-EXEC sp_4_1_relacao_escolaridade_mae_obito_fetal;
+EXEC sp_4_1_idade_mae_obito_infantil;
 GO
 
 PRINT 'Executando Pergunta 4.2: Correlação entre tipo de parto e momento do óbito.';
-EXEC sp_4_2_correlacao_parto_momento_obito;
+EXEC sp_4_2_obito_infantil_local_ocorrencia;
 GO
 
 PRINT 'Executando Pergunta 4.3: Distribuição do peso ao nascer para óbitos no primeiro ano.';
@@ -99,7 +99,7 @@ EXEC sp_4_3_distribuicao_peso_obitos_primeiro_ano;
 GO
 
 PRINT 'Executando Pergunta 4.4: Distribuição de mães cujos óbitos ocorreram durante a gravidez ou puerpério';
-EXEC sp_4_4_perfil_maes_obitos_maternos;
+EXEC sp_4_4_idade_gestacional_obito_infantil;
 GO
 
 PRINT '================================================================================';

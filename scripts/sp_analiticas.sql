@@ -288,38 +288,53 @@ GO
 -- EIXO 4: ANÁLISE DE MORTALIDADE MATERNO-INFANTIL
 --------------------------------------------------------------------------------
 
--- Pergunta 4.1: Qual a relação entre a escolaridade da mãe e a ocorrência de óbito fetal?
-
-CREATE OR ALTER PROCEDURE sp_4_1_relacao_escolaridade_mae_obito_fetal
-AS
-BEGIN
+-- Pergunta 4.1: Qual é a distribuição da idade materna entre os casos de óbitos no primeiro ano de vida?
+CREATE OR ALTER PROCEDURE sp_4_1_idade_mae_obito_infantil
+AS BEGIN
     SET NOCOUNT ON;
-    SELECT 
-        escolaridade_mae AS [Escolaridade da Mãe],
-        tipo_obito AS [Tipo Óbito],
-        COUNT(id_obito_pessoa) AS [Total Óbitos]
-    FROM vw_4_1_relacao_escolaridade_mae_obito_fetal
-    WHERE id_obito_mae IS NOT NULL AND escolaridade_mae IS NOT NULL AND escolaridade_mae <> 'Ignorado'
-    GROUP BY escolaridade_mae, tipo_obito
-    ORDER BY escolaridade_mae, tipo_obito;
-END;
+    SELECT
+        CASE
+            WHEN idade_mae < 20 THEN 'Menor de 20'
+            WHEN idade_mae BETWEEN 20 AND 29 THEN '20 a 29'
+            WHEN idade_mae BETWEEN 30 AND 39 THEN '30 a 39'
+            WHEN idade_mae >= 40 THEN '40 ou mais'
+            ELSE 'Ignorado'
+        END AS faixa_etaria_mae,
+    COUNT(id_obito_pessoa) AS total_obitos
+    FROM vw_4_1_idade_mae_obito_infantil
+    GROUP BY 
+        CASE 
+            WHEN idade_mae < 20 THEN 'Menor de 20'
+            WHEN idade_mae BETWEEN 20 AND 29 THEN '20 a 29'
+            WHEN idade_mae BETWEEN 30 AND 39 THEN '30 a 39'
+            WHEN idade_mae >= 40 THEN '40 ou mais'
+            ELSE 'Ignorado'
+        END
+    ORDER BY faixa_etaria_mae;
+END
 GO
 
--- Pergunta 4.2: O tipo de parto tem correlação com o momento do óbito em relação ao parto?
-
-CREATE OR ALTER PROCEDURE sp_4_2_correlacao_parto_momento_obito
+-- Pergunta 4.2: Onde esses óbitos ocorrem com maior frequência (hospital, domicílio, via pública)?
+CREATE OR ALTER PROCEDURE sp_4_2_obito_infantil_local_ocorrencia
 AS
 BEGIN
     SET NOCOUNT ON;
     SELECT
-        tipo_parto AS [Tipo Parto],
-        momento_obito_parto AS [Momento Óbito],
-        COUNT(id_obito) AS [Total Óbitos]
-    FROM vw_4_2_correlacao_parto_momento_obito
-    WHERE tipo_parto <> 'ignorado' AND momento_obito_parto <> 'ignorado'
-    GROUP BY tipo_parto, momento_obito_parto
-    ORDER BY [Tipo Parto], [Momento Óbito];
-END;
+        CASE lococor
+            WHEN '1' THEN 'Hospital'
+            WHEN '2' THEN 'Outro Estabelecimento de Saúde'
+            WHEN '3' THEN 'Domicílio'
+            WHEN '4' THEN 'Via Pública'
+            WHEN '5' THEN 'Outros'
+            WHEN '6' THEN 'Aldeia Indígena'
+            WHEN '7' THEN 'Estabelecimento não identificado'
+            ELSE 'Ignorado'
+        END AS local_do_obito,
+        COUNT(*) AS Total_Obitos
+    FROM vw_4_2_obito_infantil_local_ocorrencia
+    GROUP BY lococor
+    ORDER BY Total_Obitos DESC;
+END
 GO
 
 -- Pergunta 4.3: Qual é a distribuição do peso ao nascer para óbitos não fetais no primeiro ano de vida?
@@ -351,29 +366,35 @@ BEGIN
 END;
 GO
 
+-- Pergunta 4.4: Como a idade gestacional se relaciona com a ocorrência de óbito infantil?
 
--- Pergunta 4.4: Qual é o perfil de mães cujos óbitos ocorreram durante a gravidez ou puerpério?
-
-
-CREATE OR ALTER PROCEDURE sp_4_4_perfil_maes_obitos_maternos
+CREATE OR ALTER PROCEDURE sp_4_4_idade_gestacional_obito_infantil
 AS
 BEGIN
     SET NOCOUNT ON;
-    SELECT
-        COALESCE(id_escmae2010, '99') AS [ID Escolaridade],
-        COALESCE(descricao, 'Escolaridade Ignorada') AS [Escolaridade Predominante],
-        AVG(idademae) AS [Média Idade Mãe],
-        AVG(qtdfilvivo) AS [Média Filhos Vivos],
-        AVG(qtdfilmorto) AS [Média Filhos Mortos],
-        COUNT(id_obito) AS [Total Óbitos Maternos]
-    FROM vw_4_4_perfil_maes_obitos_maternos
-    WHERE id_tpmorteoco IN (1, 2, 3, 4, 5)
-    GROUP BY
-        id_escmae2010,
-        descricao;
-END;
+    SELECT 
+        CASE 
+        WHEN semana_gestacao < 28 THEN '01 - Extrema prematuridade (<28 semanas)'
+        WHEN semana_gestacao BETWEEN 28 AND 31 THEN '02 - Muito prematuro (28-31 semanas)'
+        WHEN semana_gestacao BETWEEN 32 AND 36 THEN '03 - Prematuro tardio (32-36 semanas)'
+        WHEN semana_gestacao BETWEEN 37 AND 41 THEN '04 - Termo (37-41 semanas)'
+        WHEN semana_gestacao >= 42 THEN '05 - Pós-termo (>=42 semanas)'
+        ELSE 'Ignorado'
+    END AS Faixa_Gestacional,
+    COUNT(*) AS Total_Obitos
+    FROM vw_4_4_idade_gestacional_obito_infantil
+    GROUP BY 
+    CASE 
+        WHEN semana_gestacao < 28 THEN '01 - Extrema prematuridade (<28 semanas)'
+        WHEN semana_gestacao BETWEEN 28 AND 31 THEN '02 - Muito prematuro (28-31 semanas)'
+        WHEN semana_gestacao BETWEEN 32 AND 36 THEN '03 - Prematuro tardio (32-36 semanas)'
+        WHEN semana_gestacao BETWEEN 37 AND 41 THEN '04 - Termo (37-41 semanas)'
+        WHEN semana_gestacao >= 42 THEN '05 - Pós-termo (>=42 semanas)'
+        ELSE 'Ignorado'
+    END
+ORDER BY 1;
+END
 GO
-
 
 PRINT '13 Stored Procedures do plano de análise foram criadas/atualizadas com sucesso.';
 GO

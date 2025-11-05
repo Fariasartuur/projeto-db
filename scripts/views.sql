@@ -161,30 +161,33 @@ GO
 -- EIXO 4: VIEWS DE ANÁLISE DE MORTALIDADE MATERNO-INFANTIL
 --------------------------------------------------------------------------------
 
--- VIEW para a Pergunta 4.1: Relação entre escolaridade da mãe e óbito fetal.
-CREATE OR ALTER VIEW vw_4_1_relacao_escolaridade_mae_obito_fetal AS
-SELECT 
-    em.descricao AS escolaridade_mae,
-    tb.descricao AS tipo_obito,
+-- VIEW para a Pergunta 4.1: Qual é a distribuição da idade materna entre os casos de óbitos no primeiro ano de vida?
+CREATE OR ALTER VIEW vw_4_1_idade_mae_obito_infantil AS
+SELECT
     o.id_obito AS id_obito_pessoa,
-    ma.id_obito AS id_obito_mae
+    ma.idademae AS idade_mae,
+    tb.descricao AS tipo_obito
 FROM obito o
 LEFT JOIN mae ma ON o.id_obito = ma.id_obito
-LEFT JOIN escolaridade_mae em_id ON ma.id_escol_mae = em_id.id_escol_mae
-LEFT JOIN escmae2010 em ON em_id.id_escmae2010 = em.id_escmae2010
-JOIN tipobito tb ON o.id_tipobito = tb.id_tipobito;
+JOIN tipobito tb ON o.id_tipobito = tb.id_tipobito
+JOIN pessoa_falecida pf ON o.id_obito = pf.id_obito
+JOIN idade id ON pf.id_idade = id.id_idade
+WHERE tb.descricao = 'Não Fetal' AND id.id_idade_unidade IN (1,2,3)
 GO
 
--- VIEW para a Pergunta 4.2: Correlação entre tipo de parto e momento do óbito.
-CREATE OR ALTER VIEW vw_4_2_correlacao_parto_momento_obito AS
+-- VIEW para a Pergunta 4.2: Onde esses óbitos ocorrem com maior frequência (hospital, domicílio, via pública)?
+
+CREATE OR ALTER VIEW vw_4_2_obito_infantil_local_ocorrencia AS
 SELECT
-    p.tipo AS tipo_parto,
-    op.momento AS momento_obito_parto,
-    o.id_obito
+    o.id_obito AS id_obito_pessoa,
+    id.quantidade AS idade,
+    lc.id_lococor AS lococor
 FROM obito o
-JOIN mae m ON o.id_obito = m.id_obito
-JOIN parto p ON m.id_parto = p.id_parto
-JOIN obitoparto op ON m.id_obitoparto = op.id_obitoparto;
+JOIN pessoa_falecida pf ON o.id_obito = pf.id_obito
+JOIN idade id ON id.id_idade = pf.id_idade
+JOIN local_ocorrencia lo ON lo.id_obito = o.id_obito
+JOIN lococor lc ON lo.id_lococor = lc.id_lococor
+WHERE id.id_idade_unidade IN (1,2,3)
 GO
 
 -- VIEW para a Pergunta 4.3: Distribuição do peso ao nascer para óbitos no primeiro ano.
@@ -201,7 +204,20 @@ JOIN idade idad ON pf.id_idade = idad.id_idade
 JOIN mae m ON o.id_obito = m.id_obito;
 GO
 
--- VIEW para a Pergunta 4.4: Perfil de mães em óbitos maternos.
+CREATE OR ALTER VIEW vw_4_4_idade_gestacional_obito_infantil AS
+SELECT
+    o.id_obito AS id_obito_pessoa,
+    m.semagestac AS semana_gestacao,
+    id.quantidade AS idade
+FROM obito o
+JOIN mae m ON o.id_obito = m.id_obito
+JOIN tipobito tb ON o.id_tipobito = tb.id_tipobito
+JOIN pessoa_falecida pf ON o.id_obito = pf.id_obito
+JOIN idade id ON pf.id_idade = id.id_idade
+WHERE tb.descricao =  'Não Fetal' AND id.id_idade_unidade IN (1,2,3)
+GO
+
+-- VIEW para a Pergunta 4.4: Como a idade gestacional se relaciona com a ocorrência de óbito infantil?
 CREATE OR ALTER VIEW vw_4_4_perfil_maes_obitos_maternos AS
 SELECT
     em.id_escmae2010,
