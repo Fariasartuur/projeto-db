@@ -204,6 +204,7 @@ JOIN idade idad ON pf.id_idade = idad.id_idade
 JOIN mae m ON o.id_obito = m.id_obito;
 GO
 
+-- VIEW para a Pergunta 4.4: Como a idade gestacional se relaciona com a ocorrência de óbito infantil?
 CREATE OR ALTER VIEW vw_4_4_idade_gestacional_obito_infantil AS
 SELECT
     o.id_obito AS id_obito_pessoa,
@@ -216,23 +217,3 @@ JOIN pessoa_falecida pf ON o.id_obito = pf.id_obito
 JOIN idade id ON pf.id_idade = id.id_idade
 WHERE tb.descricao =  'Não Fetal' AND id.id_idade_unidade IN (1,2,3)
 GO
-
--- VIEW para a Pergunta 4.4: Como a idade gestacional se relaciona com a ocorrência de óbito infantil?
-CREATE OR ALTER VIEW vw_4_4_perfil_maes_obitos_maternos AS
-SELECT
-    em.id_escmae2010,
-    em.descricao,
-    m.idademae,
-    m.qtdfilvivo,
-    m.qtdfilmorto,
-    o.id_obito,
-    m.id_tpmorteoco
-FROM obito o
-JOIN mae m ON o.id_obito = m.id_obito
-JOIN tpmorteoco tmo ON m.id_tpmorteoco = tmo.id_tpmorteoco
-LEFT JOIN escolaridade_mae em_id ON m.id_escol_mae = em_id.id_escol_mae
-LEFT JOIN escmae2010 em ON em_id.id_escmae2010 = em.id_escmae2010;
-GO
-
-
-

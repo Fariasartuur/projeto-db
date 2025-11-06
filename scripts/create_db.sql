@@ -13,8 +13,7 @@ GO
 
 BEGIN TRANSACTION;
 BEGIN TRY
-	USE mortalidade;
-	GO
+	USE mortalidade
 
 	CREATE TABLE municipio (
 		cod_municipio CHAR(7) PRIMARY KEY,

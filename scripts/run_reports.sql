@@ -79,24 +79,24 @@ GO
 
 -- Pergunta 4.1: Relação entre escolaridade da mãe e óbito fetal.
 PRINT 'Executando: vw_4_1_relacao_escolaridade_mae_obito_fetal';
-SELECT * FROM vw_4_1_relacao_escolaridade_mae_obito_fetal
-ORDER BY escolaridade_mae, tipo_obito;
+SELECT * FROM vw_4_1_idade_mae_obito_infantil
+ORDER BY tipo_obito;
 GO
 
 -- Pergunta 4.2: Correlação entre tipo de parto e momento do óbito.
 PRINT 'Executando: vw_4_2_correlacao_parto_momento_obito';
-SELECT * FROM vw_4_2_correlacao_parto_momento_obito
-ORDER BY tipo_parto, momento_obito_parto;
+SELECT * FROM vw_4_2_obito_infantil_local_ocorrencia
+ORDER BY lococor;
 GO
 
 -- Pergunta 4.3: Distribuição do peso ao nascer para óbitos no primeiro ano.
 PRINT 'Executando: vw_4_3_distribuicao_peso_obitos_primeiro_ano';
 SELECT * FROM vw_4_3_distribuicao_peso_obitos_primeiro_ano
-ORDER BY faixa_de_peso;
+ORDER BY peso;
 GO
 
 -- Pergunta 4.4: Perfil de mães em óbitos maternos.
 PRINT 'Executando: vw_4_4_perfil_maes_obitos_maternos';
-SELECT * FROM vw_4_4_perfil_maes_obitos_maternos
-ORDER BY total_obitos_maternos DESC;
+SELECT * FROM vw_4_4_idade_gestacional_obito_infantil
+ORDER BY semana_gestacao ASC;
 GO
