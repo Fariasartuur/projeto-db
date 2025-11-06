@@ -183,6 +183,10 @@ Para configurar o banco de dados e executar o ETL, siga a ordem abaixo:
 **Execução das VIEWS**
 - **[Arquivo](scripts/run_reports.sql)** **`scripts/run_reports.sql`**
 - **Descrição:** Este script roda todas as views criadas usadas para a parte de analise do projeto.
+  
+### 💾 Backup
+- **[Arquivo](https://drive.google.com/drive/folders/1v49PYyQiGW_v5845UJIe3amg8R-iRGNN?usp=sharing)** 
+- **Descrição:** Este arquivo contem o backup do banco de dados.
 
 ### 📁 Datasets
 
