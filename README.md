@@ -104,7 +104,7 @@ O projeto foi organizado em 13 semanas, seguindo um cronograma que garante a evo
 ## 📈 Gestão e Acompanhamento
 
 - **Kanban/Quadro de Gestão:** [Trello do Projeto](https://trello.com/b/K8ngjmX5)
-- **Business Intelligence (BI):** (em desenvolvimento)
+- **Business Intelligence (BI):** [BI](docs/bi_dashboard.xlsx)
 
 ## 📄 Documentos
 
@@ -183,6 +183,10 @@ Para configurar o banco de dados e executar o ETL, siga a ordem abaixo:
 **Execução das VIEWS**
 - **[Arquivo](scripts/run_reports.sql)** **`scripts/run_reports.sql`**
 - **Descrição:** Este script roda todas as views criadas usadas para a parte de analise do projeto.
+  
+### 💾 Backup
+- **[Arquivo](https://drive.google.com/drive/folders/1v49PYyQiGW_v5845UJIe3amg8R-iRGNN?usp=sharing)** 
+- **Descrição:** Este arquivo contem o backup do banco de dados.
 
 ### 📁 Datasets
 
